@@ -1,0 +1,13 @@
+/* Minimal resets. MUI's CssBaseline handles most base styles. */
+:root {
+  scroll-behavior: smooth;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #0B0B12;
+}

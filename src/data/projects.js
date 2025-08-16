@@ -1,0 +1,101 @@
+export const PROJECTS_DATA = {
+  'login-system': {
+    title: 'Login System',
+    category: 'MERN Stack',
+    date: 'Oct 2023',
+    url: 'https://login-system-raj4823.onrender.com/',
+    shortDescription: 'MERN Stack based Complete Login System',
+    description:
+      'A MERN stack-based login system with user registration, secure authentication, profile management, password recovery with OTP, and email notifications, and more.',
+    filter: ['react', 'superverse'],
+  },
+  'weather-site': {
+    title: 'Weather Site',
+    category: 'React, API',
+    date: 'Feb 2023',
+    url: 'https://raj4823.github.io/WeatherSite',
+    shortDescription: 'Gives weather info of any city',
+    description:
+      'You can get up-to-date, accurate weather information with a 48-hour forecast for any city using WeatherSite. It has a slick, modern design, a lovely user interface, and dynamic backgrounds that change depending on the weather.',
+    filter: ['react', 'superverse'],
+  },
+  'super-snake': {
+    title: 'SuperSnake',
+    category: 'Game, Javascript',
+    date: 'Jun 2023',
+    url: 'https://raj4823.github.io/SuperSnake/',
+    shortDescription: 'The ultimate mouse-controlled snake game',
+    description:
+      "SuperSnake is an engaging and addictive snake game that offers captivating game environment where players can control the snake's movement using their mouse/touchpad. With visually appealing graphics, smooth controls, and immersive audio, SuperSnake delivers an enjoyable and challenging gaming experience.",
+    filter: ['bootstrap', 'superverse'],
+  },
+  notesnap: {
+    title: 'NoteSnap',
+    category: 'Chrome Extension',
+    date: 'Jan 2023',
+    url: 'https://github.com/RAJ4823/NoteSnap',
+    shortDescription: 'Note-Taking Chrome Extenstion',
+    description:
+      "It is a Chrome Extension for taking note of important details on any website. You can quickly highlight and save any text with just one click. You can also copy, delete or download notes. With NoteSnap, you'll never lose important information again.",
+    filter: ['extension'],
+  },
+  'super-notes': {
+    title: 'SuperNotes',
+    category: 'Website, Bootstrap, Design',
+    date: 'August 2022',
+    url: 'https://raj4823.github.io/SuperNotes/',
+    shortDescription: 'Note-Taking Website',
+    description:
+      'SuperNotes allows you to manage your notes. You can add, delete, edit or can search the notes. It has incredible 5 themes with light mode and dark mode.',
+    filter: ['bootstrap', 'superverse'],
+  },
+  'my-site': {
+    title: 'My Site',
+    category: 'Portfolio Site, Bootstrap, Design',
+    date: 'Oct 2022',
+    url: 'https://github.com/RAJ4823/MySite',
+    shortDescription: 'My Portfolio Website',
+    description:
+      'You can see how good it is, but for details it is a bootstrap based portfolio website of mine. It consists a great UI and design. It is a fully responsive website. Current version is 2.0\n\nThis is an easter egg and you found it. 🥳',
+    filter: ['bootstrap', 'superverse'],
+  },
+  'super-calculator': {
+    title: 'SuperCalculator',
+    category: 'Website, Design',
+    date: 'Jan 2022',
+    url: 'https://raj4823.github.io/SuperCalculator/',
+    shortDescription: 'A calculator with fantastic design',
+    description:
+      'Simple calculator made with HTML, CSS & JS. It has color-changing background which looks awsome.',
+    filter: ['bootstrap', 'superverse'],
+  },
+  nmhp: {
+    title: 'NMHP',
+    category: 'UI',
+    date: 'Mar 2022',
+    url: 'https://www.figma.com/file/HOvm8hBwc6MAUnzIxJSOsK/SIH?node-id=0:1',
+    shortDescription: 'SIH 2022 Project UI',
+    description:
+      'NMHP means National Medical & Health Portal. It is a SIH 2022 project. Our main aim was to reduce exploitations happening in the hospitals with the help of website. This UI describes the working of our website.',
+    filter: ['ui'],
+  },
+  'student-portfolio': {
+    title: 'Student Portfolio',
+    category: 'UI',
+    date: 'Jun 2022',
+    url: 'https://www.figma.com/file/ws2Hms5tuk4PgdJ5giPTdF/Student-Portfolio?node-id=0%3A1',
+    shortDescription: "Figma design of Student's Portfolio",
+    description: 'Student Portfolio UI made on FIGMA. It contains both desktop view and mobile view.',
+    filter: ['ui'],
+  },
+  'email-phone-extractor': {
+    title: 'Email & Phone Extractor',
+    category: 'Chrome Extenstion',
+    date: 'Sep 2022',
+    url: 'https://github.com/RAJ4823/Email-and-Phone-Number-Extractor',
+    shortDescription: 'Simple Chrome Extenstion',
+    description:
+      'It is a chrome Extension for extracting all Emails and Phone Numbers from a web page. You can download it as .txt or .csv file.',
+    filter: ['extension'],
+  },
+};
