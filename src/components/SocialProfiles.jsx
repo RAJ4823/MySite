@@ -18,10 +18,10 @@ const iconMap = {
   Instagram: { Comp: InstagramIcon, color: '#E4405F' },
 };
 
-export default function SocialBar() {
+export default function SocialProfiles() {
   return (
     <div>
-      <Typography variant="overline" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>Social Profiles</Typography>
+      <Typography variant="overline" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontSize: '1rem', fontWeight: 600 }}>Social Profiles</Typography>
       <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
         {SOCIAL_PROFILES_DATA.map((s) => {
           const entry = iconMap[s.name] || { Comp: OpenInNewIcon, color: '#B794F4' };

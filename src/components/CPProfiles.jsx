@@ -15,7 +15,7 @@ const colors = {
 export default function CPProfiles() {
   return (
     <Box>
-      <Typography variant="overline" color="text.secondary">Competitive Profiles</Typography>
+      <Typography variant="overline" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontSize: '1rem', fontWeight: 600 }}>Competitive Profiles</Typography>
       <Stack direction="row" spacing={1} sx={{ mt: 1, flexWrap: 'wrap' }}>
         {CP_PROFILES_DATA.map((p) => {
           const color = colors[p.name] || '#B794F4';

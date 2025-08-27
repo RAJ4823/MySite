@@ -24,20 +24,13 @@ export default function FeaturedProfile() {
   return (
     <Box sx={{
       p: 3,
-      borderRadius: 2,
-      bgcolor: 'rgba(255,255,255,0.02)',
-      border: '1px solid',
-      borderColor: 'rgba(124,58,237,0.25)',
-      boxShadow: '0 10px 30px rgba(124,58,237,0.15)',
       textAlign: 'center'
     }}>
-      <Typography variant="overline" color="text.secondary">Featured</Typography>
-      <Typography variant="h5" sx={{ fontWeight: 800, mb: 2, color: 'primary.light' }}>Profile</Typography>
       <Box sx={{
         display: 'inline-block',
         bgcolor: 'rgba(16,14,24,0.45)',
         backdropFilter: 'blur(6px)',
-        borderRadius: 2,
+        borderRadius: 1,
       }}>
         <Avatar
           src={src}
@@ -52,7 +45,7 @@ export default function FeaturedProfile() {
             border: '2px solid rgba(183,148,244,0.5)', 
             transition: 'transform .3s ease', 
             '&:hover': { transform: 'scale(1.05)' }, 
-            borderRadius: 2 
+            borderRadius: 1 
           }}
         >R</Avatar>
       </Box>

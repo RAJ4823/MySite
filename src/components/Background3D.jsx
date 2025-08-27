@@ -3,25 +3,47 @@ import { Stars, Line, OrbitControls, useTexture } from '@react-three/drei';
 import { useRef, useMemo, useEffect, useLayoutEffect, useState, Suspense } from 'react';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import * as THREE from 'three';
+import {
+  DEFAULT_CAM,
+  DEFAULT_TARGET,
+  PLANET_TEXTURES,
+  EXTRA_TEXTURES,
+  SUN,
+  STARS as STARS_CONST,
+  PLANET_MATERIAL,
+  PLANETS_DEF,
+  ORBIT_LAYOUT,
+  AXIAL_TILT_DEG,
+  AXIAL_RATES,
+  SATURN_RING,
+  MOON,
+  ASTEROID_BELT,
+  COMETS as COMETS_CONST,
+  LIGHTS,
+  CAMERA,
+  ORBIT_CONTROLS,
+  BLOOM as BLOOM_CONST,
+  speedFromAU,
+} from '../data/solarSystem';
 
-// Shared default camera/target for first-time visitors
-const DEFAULT_CAM = [7.94645553321638, 4.187099196870373, -6.322110195532062];
-const DEFAULT_TARGET = [2.8, 0, -4];
+// Shared defaults are imported from data/solarSystem
 
-function Comets({ small = true, center = DEFAULT_TARGET, count = 12 }) {
+function Comets({ small = true, center = DEFAULT_TARGET, count = COMETS_CONST.count }) {
   const group = useRef();
   // Random orbital elements for each comet (Keplerian ellipses around the Sun)
   const comets = useMemo(() => {
     const arr = [];
     for (let i = 0; i < count; i++) {
-      const a = 3 + Math.random() * 8;           // semi-major axis (scene units)
-      const e = 0.2 + Math.random() * 0.7;       // eccentricity (elliptical)
-      const inc = (Math.random() * 25 - 12.5) * Math.PI / 180; // inclination ±12.5°
+      const a = COMETS_CONST.semiMajorAxis[0] + Math.random() * (COMETS_CONST.semiMajorAxis[1] - COMETS_CONST.semiMajorAxis[0]);
+      const e = COMETS_CONST.eccentricity[0] + Math.random() * (COMETS_CONST.eccentricity[1] - COMETS_CONST.eccentricity[0]);
+      const inc = (Math.random() * (COMETS_CONST.inclinationDeg[1] - COMETS_CONST.inclinationDeg[0]) + COMETS_CONST.inclinationDeg[0]) * Math.PI / 180;
       const raan = Math.random() * Math.PI * 2;  // longitude of ascending node
       const argp = Math.random() * Math.PI * 2;  // argument of periapsis
       const M0 = Math.random() * Math.PI * 2;    // mean anomaly at t=0
-      const n = 0.15 / Math.pow(a, 1.5);         // mean motion ~ a^(-3/2)
-      const size = small ? 0.012 + Math.random() * 0.02 : 0.02 + Math.random() * 0.035;
+      const n = COMETS_CONST.meanMotionK / Math.pow(a, 1.5);
+      const size = small
+        ? COMETS_CONST.sizeSmall[0] + Math.random() * (COMETS_CONST.sizeSmall[1] - COMETS_CONST.sizeSmall[0])
+        : COMETS_CONST.sizeLarge[0] + Math.random() * (COMETS_CONST.sizeLarge[1] - COMETS_CONST.sizeLarge[0]);
       // Precompute rotation matrix from perifocal to inertial (Rz(raan) Rx(inc) Rz(argp))
       const cosO = Math.cos(raan), sinO = Math.sin(raan);
       const cosi = Math.cos(inc),  sini = Math.sin(inc);
@@ -98,8 +120,8 @@ function Comets({ small = true, center = DEFAULT_TARGET, count = 12 }) {
           </mesh>
           {/* Simple translucent tail (positioned dynamically each frame) */}
           <mesh>
-            <coneGeometry args={[c.size * 0.9, c.size * 12, 12, 1, true]} />
-            <meshBasicMaterial color="#8fd8ff" transparent opacity={0.35} depthWrite={false} />
+            <coneGeometry args={[c.size * COMETS_CONST.tail.baseRadiusFactor, c.size * COMETS_CONST.tail.lengthFactor, 12, 1, true]} />
+            <meshBasicMaterial color={COMETS_CONST.tail.color} transparent opacity={COMETS_CONST.tail.opacity} depthWrite={false} />
           </mesh>
         </group>
       ))}
@@ -107,7 +129,7 @@ function Comets({ small = true, center = DEFAULT_TARGET, count = 12 }) {
   );
 }
 
-function AsteroidBelt({ center, inner = 1.7, outer = 2.0, count = 400 }) {
+function AsteroidBelt({ center, inner = ASTEROID_BELT.defaultInner, outer = ASTEROID_BELT.defaultOuter, count = ASTEROID_BELT.defaultCount }) {
   const group = useRef();
 
   // Small pool of JS-generated textures to randomize asteroid appearance without heavy assets
@@ -143,18 +165,18 @@ function AsteroidBelt({ center, inner = 1.7, outer = 2.0, count = 400 }) {
     for (let i = 0; i < count; i++) {
       const r = inner + Math.random() * (outer - inner);
       const a = Math.random() * Math.PI * 2;
-      const y = (Math.random() - 0.5) * 0.06; // slight belt thickness
-      const size = 0.006 + Math.random() * 0.02;
-      const speed = 0.15 + Math.random() * 0.15; // slow drift
+      const y = (Math.random() - 0.5) * ASTEROID_BELT.beltThickness; // slight belt thickness
+      const size = ASTEROID_BELT.sizeRange[0] + Math.random() * (ASTEROID_BELT.sizeRange[1] - ASTEROID_BELT.sizeRange[0]);
+      const speed = ASTEROID_BELT.speedRange[0] + Math.random() * (ASTEROID_BELT.speedRange[1] - ASTEROID_BELT.speedRange[0]); // slow drift
       const mat = Math.floor(Math.random() * texturePool.length);
       const rough = 0.75 + Math.random() * 0.2; // 0.75–0.95
       const metal = 0.02 + Math.random() * 0.06; // 0.02–0.08
-      const tint = 140 + Math.floor(Math.random() * 40); // lightness for color tint
+      const tint = ASTEROID_BELT.tintLightness[0] + Math.floor(Math.random() * (ASTEROID_BELT.tintLightness[1] - ASTEROID_BELT.tintLightness[0]));
       // micro rotation wobble params
-      const spinX = 0.2 + Math.random() * 0.6; // rad/s
-      const spinY = 0.1 + Math.random() * 0.4; // rad/s
-      const wobbleAmp = 0.05 + Math.random() * 0.12; // radians
-      const wobbleFreq = 0.5 + Math.random() * 1.5; // Hz
+      const spinX = ASTEROID_BELT.spin.x[0] + Math.random() * (ASTEROID_BELT.spin.x[1] - ASTEROID_BELT.spin.x[0]);
+      const spinY = ASTEROID_BELT.spin.y[0] + Math.random() * (ASTEROID_BELT.spin.y[1] - ASTEROID_BELT.spin.y[0]);
+      const wobbleAmp = ASTEROID_BELT.wobble.amp[0] + Math.random() * (ASTEROID_BELT.wobble.amp[1] - ASTEROID_BELT.wobble.amp[0]);
+      const wobbleFreq = ASTEROID_BELT.wobble.freq[0] + Math.random() * (ASTEROID_BELT.wobble.freq[1] - ASTEROID_BELT.wobble.freq[0]);
       const wobblePhase = Math.random() * Math.PI * 2;
       arr.push({ r, a, y, size, speed, mat, rough, metal, tint, spinX, spinY, wobbleAmp, wobbleFreq, wobblePhase });
     }
@@ -195,26 +217,12 @@ function AsteroidBelt({ center, inner = 1.7, outer = 2.0, count = 400 }) {
 
 function SolarSystem({ useTextures = false, showEquators = false }) {
   // Single solar system, slightly to the right
-  const center = [2.8, 0, -4];
+  const center = DEFAULT_TARGET;
 
   // Planet textures from local public folder (medium quality recommended: 1k–2k)
-  const tex = useTextures ? useTexture({
-    mercury: '/textures/planets/mercury.jpg',
-    venus: '/textures/planets/venus.jpg',
-    earth: '/textures/planets/earth.jpg',
-    mars: '/textures/planets/mars.jpg',
-    jupiter: '/textures/planets/jupiter.jpg',
-    saturn: '/textures/planets/saturn.jpg',
-    uranus: '/textures/planets/uranus.jpg',
-    neptune: '/textures/planets/neptune.jpg',
-    saturnRing: '/textures/planets/saturn_ring.png',
-  }) : {};
+  const tex = useTextures ? useTexture(PLANET_TEXTURES) : {};
   // Extra textures (optional): sun, moon, milky way background
-  const extra = useTextures ? useTexture({
-    sun: '/textures/sun.jpg',
-    moon: '/textures/moon.jpg',
-    milkyway: '/textures/milkyway.jpg',
-  }) : {};
+  const extra = useTextures ? useTexture(EXTRA_TEXTURES) : {};
 
   // Improve texture clarity on oblique angles (AF) and color space. No-op when textures disabled.
   const { gl } = useThree();
@@ -228,15 +236,15 @@ function SolarSystem({ useTextures = false, showEquators = false }) {
         if (max) t.anisotropy = max;
         if ('colorSpace' in t) t.colorSpace = THREE.SRGBColorSpace; else if ('encoding' in t) t.encoding = THREE.sRGBEncoding;
       });
-      // Saturn ring UV mapping: top of image -> inner radius, bottom -> outer radius
-      // RingGeometry uses v: 0 at inner, 1 at outer. If PNG has top=inner, bottom=outer,
-      // flip V and offset to keep alignment.
+      // Saturn ring UV mapping per constants
       if (tex.saturnRing) {
         tex.saturnRing.wrapS = tex.saturnRing.wrapT = THREE.RepeatWrapping;
-        // tex.saturnRing.repeat.set(1, -1); // flip V
-        tex.saturnRing.offset.set(0, 0);  // keep range within [0,1] after flip
+        const [ru, rv] = SATURN_RING.mapping.repeat;
+        const [ou, ov] = SATURN_RING.mapping.offset;
+        tex.saturnRing.repeat.set(ru, rv);
+        tex.saturnRing.offset.set(ou, ov);
         tex.saturnRing.center.set(0.5, 0.5);
-        tex.saturnRing.rotation = 0;
+        tex.saturnRing.rotation = SATURN_RING.mapping.rotation || 0;
         tex.saturnRing.needsUpdate = true;
       }
     } catch {}
@@ -245,28 +253,18 @@ function SolarSystem({ useTextures = false, showEquators = false }) {
   // Compute realistic orbit distances using compressed sqrt(AU) scaling + collision-safe clearances.
   // This ensures no visual overlap even when a planet (esp. Saturn with rings) is closest to the Sun.
   const planets = useMemo(() => {
-    const defs = [
-      { name: 'Mercury', color: '#9e9e9e', r: 0.06, AU: 0.39 },
-      { name: 'Venus',   color: '#caa472', r: 0.10, AU: 0.72 },
-      { name: 'Earth',   color: '#5AB1FF', r: 0.11, AU: 1.00 },
-      { name: 'Mars',    color: '#ff6b57', r: 0.09, AU: 1.52 },
-      { name: 'Jupiter', color: '#d2b48c', r: 0.24, AU: 5.20 },
-      { name: 'Saturn',  color: '#e6d7a3', r: 0.20, AU: 9.58, ring: true },
-      { name: 'Uranus',  color: '#79e0e8', r: 0.16, AU: 19.20 },
-      { name: 'Neptune', color: '#6f8bff', r: 0.16, AU: 30.05 },
-    ];
-    const base = 0.35;        // base offset from the sun for Mercury
-    const scale = 1.25;       // visual scale for sqrt(AU)
-    const buffer = 0.12;      // minimum empty space between neighboring orbits after clearances
+    const defs = PLANETS_DEF;
+    const base = ORBIT_LAYOUT.base;
+    const scale = ORBIT_LAYOUT.scale;
+    const buffer = ORBIT_LAYOUT.buffer;
 
     // Initial radii from sqrt(AU)
     const initial = defs.map(d => base + scale * Math.sqrt(d.AU));
 
     // Clearance per planet: own radius; Saturn uses outer ring radius for safety
-    const outerRingScale = 2.6; // matches ringGeometry outer factor used for Saturn
-    const clearance = defs.map(d => d.name === 'Saturn' ? d.r * outerRingScale : d.r);
+    const clearance = defs.map(d => d.name === 'Saturn' ? d.r * ORBIT_LAYOUT.outerRingScale : d.r);
 
-    // Enforce non-overlap: for each next orbit, ensure its inner edge is beyond the previous outer edge + buffer
+    // Enforce non-overlap
     const radii = [...initial];
     let prevOuter = radii[0] + clearance[0];
     for (let i = 1; i < radii.length; i++) {
@@ -278,16 +276,15 @@ function SolarSystem({ useTextures = false, showEquators = false }) {
       prevOuter = radii[i] + clearance[i];
     }
 
-    // Speeds inversely proportional to sqrt(AU); normalize Earth ~ 1.0
-    const invSqrtAU = defs.map(d => 1 / Math.sqrt(d.AU));
-    const earthSpeed = invSqrtAU[2];
+    // Speeds normalized to Earth
+    const speeds = speedFromAU(defs.map(d => d.AU));
 
     return defs.map((d, i) => ({
       name: d.name,
       color: d.color,
       r: d.r,
       orbitR: Number(radii[i].toFixed(2)),
-      speed: Number((invSqrtAU[i] / earthSpeed).toFixed(2)),
+      speed: speeds[i],
       phase: i * 0.2,
       ring: !!d.ring,
     }));
@@ -309,51 +306,23 @@ function SolarSystem({ useTextures = false, showEquators = false }) {
     return { inner: Number(inner.toFixed(2)), outer: Number(outer.toFixed(2)), count };
   }, [planets]);
 
-  // Per-planet material tuning (roughness/metalness, optional emissive tweaks)
-  const matParams = useMemo(() => ({
-    Mercury: { roughness: 0.9,  metalness: 0.05 },
-    Venus:   { roughness: 0.85, metalness: 0.02 },
-    Earth:   { roughness: 0.6,  metalness: 0.05 },
-    Mars:    { roughness: 0.8,  metalness: 0.04 },
-    Jupiter: { roughness: 0.5,  metalness: 0.06 },
-    Saturn:  { roughness: 0.55, metalness: 0.06 },
-    Uranus:  { roughness: 0.4,  metalness: 0.1  },
-    Neptune: { roughness: 0.45, metalness: 0.1  },
-  }), []);
+  // Per-planet material tuning
+  const matParams = useMemo(() => PLANET_MATERIAL, []);
 
   // Axial tilt (obliquity) in degrees for each planet
-  const tiltDeg = useMemo(() => ({
-    Mercury: 0.03,
-    Venus: 177.36,
-    Earth: 23.44,
-    Mars: 25.19,
-    Jupiter: 3.13,
-    Saturn: 26.73,
-    Uranus: 97.77,
-    Neptune: 28.32,
-  }), []);
+  const tiltDeg = useMemo(() => AXIAL_TILT_DEG, []);
 
   const planetRefs = useRef([]); // refs for planet groups (so rings follow)
   const planetMeshRefs = useRef([]); // refs for planet meshes to self-rotate
   const moonOrbitRef = useRef(); // Earth's moon orbit group
 
-  // Axial rotation rates (rad/s) with correct direction (retrograde negative)
-  // Chosen for visual clarity while maintaining relative realism
-  const axialRates = useMemo(() => ({
-    Mercury: 0.6,    // faster for visibility
-    Venus:  -0.2,    // retrograde, a bit faster for visibility
-    Earth:  1.0,     // baseline
-    Mars:   0.9,     // similar to Earth
-    Jupiter:3.0,     // very fast
-    Saturn: 2.4,     // fast
-    Uranus: -1.6,    // retrograde (tilted ~98°)
-    Neptune:1.4,     // fast
-  }), []);
+  // Axial rotation rates (rad/s)
+  const axialRates = AXIAL_RATES;
 
   // Precompute circular orbit points for rendering orbit lines (in XZ plane)
   const makeCircle = (radius) => {
     const pts = [];
-    const steps = 64;
+    const steps = ORBIT_LAYOUT.orbitLineSteps;
     for (let i = 0; i <= steps; i++) {
       const a = (i / steps) * Math.PI * 2;
       // xz circle; keep y at 0 for top-down view
@@ -397,22 +366,22 @@ function SolarSystem({ useTextures = false, showEquators = false }) {
       )}
       {/* Sun at the system center (slightly right) */}
       <mesh position={[center[0], center[1], center[2]]} castShadow receiveShadow>
-        <sphereGeometry args={[0.35, 32, 32]} />
+        <sphereGeometry args={[SUN.radius, 32, 32]} />
         {/* Use emissive map if available for subtle surface detail */}
         {extra?.sun ? (
           <meshStandardMaterial
             map={extra.sun}
-            emissive="#ffaa00"
+            emissive={SUN.emissiveColor}
             emissiveMap={extra.sun}
-            emissiveIntensity={1.8}
-            color="#ffffff"
+            emissiveIntensity={SUN.emissiveIntensity}
+            color={SUN.color}
           />
         ) : (
-          <meshStandardMaterial emissive="#ffaa00" emissiveIntensity={1.6} color="#ffcc55" />
+          <meshStandardMaterial emissive={SUN.emissiveColor} emissiveIntensity={SUN.emissiveIntensity * 0.9} color="#ffcc55" />
         )}
       </mesh>
       {/* Strong point light at the Sun for highlights */}
-      <pointLight position={[center[0], center[1], center[2]]} intensity={3.2} distance={10} decay={2} />
+      <pointLight position={[center[0], center[1], center[2]]} intensity={SUN.pointLight.intensity} distance={SUN.pointLight.distance} decay={SUN.pointLight.decay} />
 
       {/* Orbits and planets */}
       {planets.map((p, i) => (
@@ -703,21 +672,21 @@ export default function Background3D({ mode = 'background' }) {
       <Canvas
         shadows={{ type: THREE.PCFSoftShadowMap }}
         gl={{ physicallyCorrectLights: true }}
-        camera={{ position: DEFAULT_CAM, fov: 55 }}
+        camera={{ position: DEFAULT_CAM, fov: CAMERA.fov }}
       >
         {/* Always-visible scene elements */}
         <color attach="background" args={["#0B0B12"]} />
-        <hemisphereLight args={[0x8899ff, 0x0b0b12, 0.35]} />
-        <ambientLight intensity={0.35} />
+        <hemisphereLight args={[LIGHTS.hemi.sky, LIGHTS.hemi.ground, LIGHTS.hemi.intensity]} />
+        <ambientLight intensity={LIGHTS.ambient.intensity} />
         <directionalLight
-          position={[4, 6, 4]}
-          intensity={0.8}
+          position={LIGHTS.dir.position}
+          intensity={LIGHTS.dir.intensity}
           castShadow
-          shadow-mapSize-width={2048}
-          shadow-mapSize-height={2048}
-          shadow-bias={-0.0006}
+          shadow-mapSize-width={LIGHTS.dir.shadow.mapSize}
+          shadow-mapSize-height={LIGHTS.dir.shadow.mapSize}
+          shadow-bias={LIGHTS.dir.shadow.bias}
         />
-        <Stars radius={60} depth={120} count={5000} factor={3} saturation={0} fade speed={0.8} />
+        <Stars radius={STARS_CONST.radius} depth={STARS_CONST.depth} count={STARS_CONST.count} factor={STARS_CONST.factor} saturation={STARS_CONST.saturation} fade={STARS_CONST.fade} speed={STARS_CONST.speed} />
         <Comets small={mode !== 'interactive'} />
         {mode === 'background' && <ApplySavedCamera />}
         {/* Load textured planets lazily; show non-textured until all images preloaded */}
@@ -730,16 +699,16 @@ export default function Background3D({ mode = 'background' }) {
         )}
         {mode === 'interactive' && <ApplySavedCameraInteractive controlsRef={controlsRef} />}
         {mode === 'interactive' && (
-          <OrbitControls ref={controlsRef} makeDefault target={DEFAULT_TARGET} enablePan={false} enableDamping dampingFactor={0.08} rotateSpeed={0.8} zoomSpeed={0.9} minDistance={2.5} maxDistance={14} minPolarAngle={0.05} maxPolarAngle={Math.PI - 0.25} />
+          <OrbitControls ref={controlsRef} makeDefault target={ORBIT_CONTROLS.target} enablePan={ORBIT_CONTROLS.enablePan} enableDamping dampingFactor={ORBIT_CONTROLS.dampingFactor} rotateSpeed={ORBIT_CONTROLS.rotateSpeed} zoomSpeed={ORBIT_CONTROLS.zoomSpeed} minDistance={ORBIT_CONTROLS.minDistance} maxDistance={ORBIT_CONTROLS.maxDistance} minPolarAngle={ORBIT_CONTROLS.minPolarAngle} maxPolarAngle={ORBIT_CONTROLS.maxPolarAngle} />
         )}
         {mode === 'interactive' && <CameraStateSync controlsRef={controlsRef} />}
         <EffectComposer>
           <Bloom
-            intensity={mode === 'interactive' ? 1.0 : 0.6}
-            luminanceThreshold={0.25}
-            luminanceSmoothing={0.65}
+            intensity={mode === 'interactive' ? BLOOM_CONST.intensityInteractive : BLOOM_CONST.intensityBackground}
+            luminanceThreshold={BLOOM_CONST.luminanceThreshold}
+            luminanceSmoothing={BLOOM_CONST.luminanceSmoothing}
             mipmapBlur
-            radius={0.9}
+            radius={BLOOM_CONST.radius}
           />
         </EffectComposer>
       </Canvas>

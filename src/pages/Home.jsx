@@ -2,8 +2,6 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -18,12 +16,14 @@ import ProjectCard from '../components/ProjectCard';
 import Background3D from '../components/Background3D';
 import ProjectModal from '../components/ProjectModal';
 import FeaturedProfile from '../components/FeaturedProfile';
-import SocialBar from '../components/SocialBar';
+import SocialProfiles from '../components/SocialProfiles';
 import CPProfiles from '../components/CPProfiles';
 import ScrollHint from '../components/ScrollHint';
 import CPAchievements from '../components/CPAchievements';
 import Interests from '../components/Interests';
 import TechStack from '../components/TechStack';
+import EducationTimeline from '../components/EducationTimeline';
+import ExperienceTimeline from '../components/ExperienceTimeline';
 
 import { ABOUT_ME_DATA } from '../data/about';
 import { EDUCATION_DATA } from '../data/education';
@@ -60,7 +60,7 @@ export default function Home() {
       <Box sx={{ position: 'relative', zIndex: 1, filter: openKey || solarOpen ? 'blur(4px)' : 'none', transition: 'filter .25s ease' }}>
         <Navbar onOpenSolar={() => setSolarOpen(true)} />
 
-      <Section id="home">
+      <Section id="home" glass={false}>
         <Box sx={{ minHeight: { xs: '92vh', md: 'calc(100vh - 80px)' }, display: 'flex', alignItems: 'center' }}>
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12} md={6}>
@@ -84,6 +84,7 @@ export default function Home() {
           </Box>
           {/* Right: Intro then Personal Info below */}
           <Box sx={{ flexBasis: { xs: '100%', sm: 'auto' }, flexGrow: 1, minWidth: 0 }}>
+            <Typography variant="overline" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontSize: '1rem', fontWeight: 600 }}>Hello...</Typography>
             <Box>
               {ABOUT_ME_DATA.introduction.map((p, i) => (
                 <Typography key={i} sx={{ mb: 1.2 }}>{p}</Typography>
@@ -99,7 +100,7 @@ export default function Home() {
               ))}
             </Box>
             <Box sx={{ mt: 2 }}>
-              <SocialBar />
+              <SocialProfiles />
             </Box>
             <Box sx={{ mt: 2 }}>
               <CPProfiles />
@@ -116,51 +117,11 @@ export default function Home() {
       </Section>
 
       <Section id="education">
-        <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>Education</Typography>
-        <Box sx={{ position: 'relative', pl: { xs: 5, md: 7 }, '--tl-x': '22px', '--dot-size': '14px' }}>
-          <Box sx={{ position: 'absolute', left: 'var(--tl-x)', top: 0, bottom: 0, width: 2, bgcolor: 'rgba(124,58,237,0.4)', zIndex: 1 }} />
-          {EDUCATION_DATA.map((ed) => (
-            <Box key={ed.school} sx={{ position: 'relative', mb: 3 }}>
-              <Box sx={{ position: 'absolute', left: 'var(--tl-x)', transform: 'translateX(-50%)', top: 6, width: 'var(--dot-size)', height: 'var(--dot-size)', borderRadius: '50%', bgcolor: '#7C3AED', boxShadow: '0 0 0 4px rgba(124,58,237,0.25)', zIndex: 2 }} />
-              <Paper variant="outlined" sx={{ p: 2, ml: 2, borderColor: 'rgba(124,58,237,0.35)', boxShadow: '0 10px 30px rgba(124,58,237,0.15)', bgcolor: 'rgba(16,14,24,0.45)', backdropFilter: 'blur(6px)', position: 'relative', zIndex: 0 }}>
-                <Typography variant="h6" sx={{ fontWeight: 700 }}>{ed.school}</Typography>
-                <Typography variant="body2" color="text.secondary">{ed.location} — {ed.duration}</Typography>
-                <Divider sx={{ my: 1.5 }} />
-                <Typography variant="subtitle2" sx={{ mb: 0.5 }}>{ed.degree}</Typography>
-                {ed.achievements.map((a) => (
-                  <Chip key={a} label={a} size="small" sx={{ mr: 1, mb: 1 }} />
-                ))}
-              </Paper>
-            </Box>
-          ))}
-        </Box>
+        <EducationTimeline />
       </Section>
 
       <Section id="experience">
-        <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>Experience</Typography>
-        <Box sx={{ position: 'relative', pl: { xs: 5, md: 7 }, '--tl-x': '22px', '--dot-size': '14px' }}>
-          <Box sx={{ position: 'absolute', left: 'var(--tl-x)', top: 0, bottom: 0, width: 2, bgcolor: 'rgba(124,58,237,0.4)', zIndex: 1 }} />
-          {EXPERIENCE_DATA.map((exp) => (
-            <Box key={exp.company} sx={{ position: 'relative', mb: 3 }}>
-              <Box sx={{ position: 'absolute', left: 'var(--tl-x)', transform: 'translateX(-50%)', top: 6, width: 'var(--dot-size)', height: 'var(--dot-size)', borderRadius: '50%', bgcolor: '#7C3AED', boxShadow: '0 0 0 4px rgba(124,58,237,0.25)', zIndex: 2 }} />
-              <Paper variant="outlined" sx={{ p: 2, ml: 2, borderColor: 'rgba(124,58,237,0.35)', boxShadow: '0 10px 30px rgba(124,58,237,0.15)', bgcolor: 'rgba(16,14,24,0.45)', backdropFilter: 'blur(6px)', position: 'relative', zIndex: 0 }}>
-                <Typography variant="h6" sx={{ fontWeight: 700 }}>{exp.company}</Typography>
-                <Divider sx={{ my: 1.5 }} />
-                <Grid container spacing={2}>
-                  {exp.roles.map((r) => (
-                    <Grid item key={r.role} xs={12} md={6}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>{r.role}</Typography>
-                      <Typography variant="body2" color="text.secondary">{r.location} — {r.duration}</Typography>
-                      <ul style={{ marginTop: 8 }}>
-                        {r.responsibilities.map((res) => (<li key={res}><Typography variant="body2">{res}</Typography></li>))}
-                      </ul>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Paper>
-            </Box>
-          ))}
-        </Box>
+        <ExperienceTimeline />
       </Section>
 
       <Section id="skills">
