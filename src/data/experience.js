@@ -23,4 +23,30 @@ export const EXPERIENCE_DATA = [
       },
     ],
   },
+  {
+    company: "Zero to Zee",
+    roles: [
+      {
+        role: "Technical Lead",
+        duration: "Aug, 2024 - Jun 2025",
+        location: "Remote",
+        responsibilities: [
+          "Managing all technical aspects of the company's key products including WhatsApp Automation Extension, Google Meet Recording Extension.",
+          "Scaled user base of WhatsApp Automation Extension from 20K to 100K, and Other Products from 5K to 70K under my leadership.",
+          "Led a team of four developers, enhancing teamwork and increasing productivity.",
+          "Led the development of key features like login system, dashboard, multi-account payments, and config-based dynamic updates.",
+          "Responsible for solutioning, assigning tasks, reviewing code, and handling full-stack development across all products",
+        ]
+      },
+      {
+        role: "Software Developer",
+        duration: "Feb, 2023 - Jul, 2024",
+        location: "Remote",
+        responsibilities: [
+          "Significantly contributed to the development and refinement of the Key Products.",
+          "Communicated with clients globally, addressing their concerns and providing quick solutions.",
+        ]
+      }
+    ]
+  }
 ];

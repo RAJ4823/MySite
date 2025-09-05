@@ -10,12 +10,6 @@ export default function FeaturedProfile() {
   const [idx, setIdx] = useState(0);
   const available = useMemo(() => candidates.slice(0, 8), []);
   const imgList = available.slice(0, 3);
-  const timer = useRef(null);
-
-  useEffect(() => {
-    timer.current = setInterval(() => setIdx((i) => (i + 1) % imgList.length), 60000);
-    return () => { if (timer.current) clearInterval(timer.current); };
-  }, [imgList.length]);
 
   const next = () => setIdx((i) => (i + 1) % imgList.length);
 

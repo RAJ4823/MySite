@@ -2,7 +2,7 @@
 // Import these into components to avoid hardcoded magic numbers.
 
 // Camera defaults
-export const DEFAULT_CAM = [7.94645553321638, 4.187099196870373, -6.322110195532062];
+export const DEFAULT_CAM = [8.592502439957185, 2.247226468071675, -7.90004483334747];
 export const DEFAULT_TARGET = [2.8, 0, -4];
 
 // Texture paths (relative to public/)

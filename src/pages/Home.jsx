@@ -64,10 +64,10 @@ export default function Home() {
         <Box sx={{ minHeight: { xs: '92vh', md: 'calc(100vh - 80px)' }, display: 'flex', alignItems: 'center' }}>
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12} md={6}>
-            <Typography variant="overline" color="text.secondary">Welcome</Typography>
+            <Typography variant="h6" color="text.secondary">Hello, I am</Typography>
             <Typography variant="h2" sx={{ fontWeight: 800, lineHeight: 1.1 }}>Raj Patel</Typography>
             <Typography variant="h5" sx={{ mt: 1, color: 'primary.light' }}>A Full-Stack Software Developer</Typography>
-            <Typography sx={{ mt: 2, opacity: 0.9 }}>{ABOUT_ME_DATA.introduction[0]}</Typography>
+            {/* <Typography sx={{ mt: 2, opacity: 0.9 }}>{ABOUT_ME_DATA.introduction[0]}</Typography> */}
           </Grid>
         </Grid>
         </Box>
@@ -177,7 +177,7 @@ export default function Home() {
 
       <Section id="projects">
         <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>Featured Projects</Typography>
-        <Grid container spacing={3} justifyContent="space-between">
+        <Grid container spacing={3} justifyContent="space-around">
           {projects.map(([key, p]) => (
             <Grid item key={key} xs={12} sm={6} md={3} lg={3}>
               <ProjectCard projectKey={key} project={p} onOpen={(k) => setOpenKey(k)} />

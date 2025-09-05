@@ -6,11 +6,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import { useCallback } from 'react';
+import Box from '@mui/material/Box';
 
 const pages = [
   { label: 'Home', id: 'home' },
   { label: 'About', id: 'about' },
-  { label: 'Education', id: 'education' },
+  // { label: 'Education', id: 'education' },
   { label: 'Experience', id: 'experience' },
   { label: 'Skills', id: 'skills' },
   { label: 'Projects', id: 'projects' },
@@ -19,9 +20,16 @@ const pages = [
 export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
   const go = useCallback((id) => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    // update hash for back/forward behavior
-    if (id) location.hash = `#${id}`;
+    if (el) {
+      // Update URL without page reload
+      window.history.pushState({}, '', `#${id}`);
+      // Smooth scroll to element
+      el.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
   }, []);
   return (
     <AppBar position="sticky" color="transparent" sx={{ backdropFilter: 'blur(10px)', bgcolor: 'rgba(18,18,26,0.6)', borderBottom: '1px solid', borderColor: 'divider' }}>
@@ -32,7 +40,24 @@ export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
               <MenuIcon />
             </IconButton>
           )}
-          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 800, letterSpacing: 1 }}>RAJ4823</Typography>
+          <div onClick={() => go('home')} style={{ cursor: 'pointer', flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+            <Box
+              component="img"
+              src="/mylogo/purple_logo.png"
+              alt="Logo"
+              sx={{
+                height: 80,
+                margin: '-10px',
+                cursor: 'pointer',
+                filter: 'contrast(1.2) brightness(1.2)',
+                '&:hover': {
+                  opacity: 0.8,
+                  transition: 'opacity 0.2s ease-in-out',
+                  filter: 'contrast(1.5) brightness(1.5)',
+                },
+              }}
+            />
+          </div>
           {!overlay && pages.map((p) => (
             <Button key={p.id} color="inherit" onClick={() => go(p.id)} sx={{ fontWeight: 600 }}>
               {p.label}

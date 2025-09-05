@@ -12,7 +12,15 @@ export default function Section({
   contentSx = {},
 }) {
   return (
-    <Box id={id} sx={{ py: { xs: 3, md: 5 }, scrollMarginTop: { xs: 64, md: 80 } }}>
+    <Box 
+      id={id} 
+      sx={{ 
+        py: { xs: 3, md: 5 }, 
+        scrollMarginTop: '80px',
+        scrollSnapMarginTop: '80px',
+        scrollBehavior: 'smooth'
+      }}
+    >
       <Container maxWidth={maxWidth} disableGutters={disableGutters}>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
