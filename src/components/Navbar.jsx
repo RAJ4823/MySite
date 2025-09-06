@@ -21,11 +21,16 @@ export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
   const go = useCallback((id) => {
     const el = document.getElementById(id);
     if (el) {
-      // Update URL without page reload
-      window.history.pushState({}, '', `#${id}`);
+      // Update URL with hash
+      if (window.history.pushState) {
+        const newUrl = `${window.location.pathname}${window.location.search}#${id}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+      } else {
+        window.location.hash = `#${id}`;
+      }
       // Smooth scroll to element
-      el.scrollIntoView({
-        behavior: 'smooth',
+      el.scrollIntoView({ 
+        behavior: 'smooth', 
         block: 'start',
         inline: 'nearest'
       });
@@ -43,17 +48,16 @@ export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
           <div onClick={() => go('home')} style={{ cursor: 'pointer', flexGrow: 1, display: 'flex', alignItems: 'center' }}>
             <Box
               component="img"
-              src="/mylogo/purple_logo.png"
+              src="/images/logo/purple_logo.png"
               alt="Logo"
               sx={{
                 height: 80,
                 margin: '-10px',
                 cursor: 'pointer',
-                filter: 'contrast(1.2) brightness(1.2)',
+                filter: 'contrast(1.2)',
                 '&:hover': {
                   opacity: 0.8,
                   transition: 'opacity 0.2s ease-in-out',
-                  filter: 'contrast(1.5) brightness(1.5)',
                 },
               }}
             />

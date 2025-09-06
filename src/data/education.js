@@ -6,8 +6,7 @@ export const EDUCATION_DATA = [
     location: 'Ahmedabad',
     achievements: [
       'Grade: 9.54 CGPA',
-      'Ranked as the top performer with 9.51 CPI',
-      'Honored with the Certificate of Excellence for being Top Ranker in both 3rd and 4th year by Dewang Mehta IT Award. ',
+      '2x Gold Medalist in college with highest CGPA; awarded by GTU & Dewang Mehta Trust in 3rd & 4th year.',
     ],
   },
   {

@@ -1,4 +1,4 @@
-export const SKILLS_DATA = [
+export const TECH_SKILLS_DATA = [
   { skill: 'Front-end Web Development', percentage: 95 },
   { skill: 'Full-stack Web Development', percentage: 75 },
   { skill: 'AWS [EC2, S3, Lambda, RDS, DynamoDB]', percentage: 85 },
@@ -9,4 +9,13 @@ export const SKILLS_DATA = [
   { skill: 'Java', percentage: 70 },
   { skill: 'C++', percentage: 80 },
   { skill: 'Git & Github', percentage: 90 },
+];
+
+export const SOFT_SKILLS_DATA = [
+  'Leadership', 
+  'Problem-Solving', 
+  'Teamwork', 
+  'Creativity', 
+  'Attention to Details', 
+  'Adaptability'
 ];

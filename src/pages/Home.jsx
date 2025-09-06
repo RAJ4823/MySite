@@ -26,10 +26,8 @@ import EducationTimeline from '../components/EducationTimeline';
 import ExperienceTimeline from '../components/ExperienceTimeline';
 
 import { ABOUT_ME_DATA } from '../data/about';
-import { EDUCATION_DATA } from '../data/education';
-import { EXPERIENCE_DATA } from '../data/experience';
-import { SKILLS_DATA } from '../data/skills';
 import { PROJECTS_DATA } from '../data/projects';
+import { TECH_SKILLS_DATA, SOFT_SKILLS_DATA } from '../data/skills';
 
 export default function Home() {
   const entries = Object.entries(PROJECTS_DATA);
@@ -130,12 +128,12 @@ export default function Home() {
           <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>Tech Skills</Typography>
           <Grid container justifyContent="space-between">
             <Grid item xs={12} md={6} lg={6} width="48%">
-              {SKILLS_DATA.slice(0, Math.ceil(SKILLS_DATA.length / 2)).map((s) => (
+              {TECH_SKILLS_DATA.slice(0, Math.ceil(TECH_SKILLS_DATA.length / 2)).map((s) => (
                 <SkillBar key={s.skill} label={s.skill} value={s.percentage} />
               ))}
             </Grid>
             <Grid item xs={12} md={6} lg={6} width="48%">
-              {SKILLS_DATA.slice(Math.ceil(SKILLS_DATA.length / 2)).map((s) => (
+              {TECH_SKILLS_DATA.slice(Math.ceil(TECH_SKILLS_DATA.length / 2)).map((s) => (
                 <SkillBar key={s.skill} label={s.skill} value={s.percentage} />
               ))}
             </Grid>
@@ -154,18 +152,24 @@ export default function Home() {
 
         <Box sx={{ mt: 3 }}>
           <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>Soft Skills</Typography>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {['Leadership', 'Problem-Solving', 'Teamwork', 'Creativity', 'Attention to Details', 'Adaptability'].map((s) => (
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+            {SOFT_SKILLS_DATA.map((s) => (
               <Paper
                 key={s}
                 variant="outlined"
                 sx={{
-                  px: 1.25,
+                  px: 1.5,
                   py: 0.75,
+                  cursor: 'default', 
                   borderColor: 'rgba(124,58,237,0.35)',
                   bgcolor: 'rgba(16,14,24,0.45)',
                   backdropFilter: 'blur(6px)',
                   borderRadius: 2,
+                  transition: 'all .2s ease',
+                  '&:hover': {
+                    transform: 'scale(1.05)',
+                    opacity: 0.9,
+                  },
                 }}
               >
                 <Typography variant="body1" sx={{ opacity: 0.9 }}>{s}</Typography>

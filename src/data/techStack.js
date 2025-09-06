@@ -17,7 +17,7 @@ export const TECH_STACK = [
   { name: 'Google Analytics', key: 'ga', iconify: 'logos:google-analytics', color: '#E37400' },
   { name: 'Netlify', key: 'netlify', iconify: 'logos:netlify', color: '#00AD9F' },
   { name: 'Git', key: 'git', iconify: 'logos:git-icon', color: '#F05032' },
-  { name: 'GitHub', key: 'github', iconify: 'ion:logo-github', color: '#8A2BE2' },
+  { name: 'GitHub', key: 'github', iconify: 'ion:logo-github', color: '#fffefe' },
   { name: 'VS Code', key: 'vscode', iconify: 'logos:visual-studio-code', color: '#007ACC' },
   { name: 'IntelliJ IDEA', key: 'intellij', iconify: 'logos:intellij-idea', color: '#1572B6' },
   { name: 'Postman', key: 'postman', iconify: 'logos:postman-icon', color: '#FF6C37' },

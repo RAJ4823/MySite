@@ -16,8 +16,8 @@ export default function Section({
       id={id} 
       sx={{ 
         py: { xs: 3, md: 5 }, 
-        scrollMarginTop: '80px',
-        scrollSnapMarginTop: '80px',
+        scrollMarginTop: '50px',
+        scrollSnapMarginTop: '50px',
         scrollBehavior: 'smooth'
       }}
     >

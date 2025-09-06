@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 
 export default function ProjectModal({ open, onClose, projectKey, project }) {
   if (!project) return null;
-  const imgSrc = `/portfolio/${projectKey}.jpg`;
+  const imgSrc = `/images/portfolio/${projectKey}.jpg`;
 
   return (
     <Dialog

@@ -39,9 +39,9 @@ function TechCard({ name, color, iconify }) {
         onTouchStart={() => setHover(true)}
         onTouchEnd={() => setHover(false)}
         sx={{
-          width: 96,
-          height: 96,
-          borderRadius: 3,
+          width: 80,
+          height: 80,
+          borderRadius: 2,
           border: '1px solid',
           borderColor: 'rgba(124,58,237,0.35)',
           bgcolor: 'rgba(16,14,24,0.6)',
@@ -61,8 +61,8 @@ function TechCard({ name, color, iconify }) {
           <img
             src={`https://api.iconify.design/${iconify}.svg`}
             alt={name}
-            width={42}
-            height={42}
+            width={50}
+            height={50}
             style={{ display: 'block', filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.35))' }}
             loading="lazy"
             onError={(e) => { e.currentTarget.style.opacity = '0.6'; }}
@@ -77,12 +77,18 @@ function TechCard({ name, color, iconify }) {
 
 export default function TechStack() {
   return (
-    <Grid container spacing={2} sx={{ mt: 1 }} justifyContent="space-between">
+    <Box sx={{
+      mt: 1,
+      mx: 'auto',
+      display: "flex",
+      justifyContent: "left",
+      alignItems: "center",
+      flexWrap: "wrap",
+      gap: 2,
+    }} >
       {TECH_STACK.map((t) => (
-        <Grid item key={t.key} xs={4} sm={3} md={2} lg={2}>
-          <TechCard name={t.name} color={t.color} iconify={t.iconify} />
-        </Grid>
+        <TechCard key={t.key} name={t.name} color={t.color} iconify={t.iconify} />
       ))}
-    </Grid>
+    </Box>
   );
 }

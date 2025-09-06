@@ -13,7 +13,7 @@ export default function FeaturedProfile() {
 
   const next = () => setIdx((i) => (i + 1) % imgList.length);
 
-  const src = `/profile/${imgList[idx]}`;
+  const src = `/images/profile/${imgList[idx]}`;
 
   return (
     <Box sx={{
@@ -25,6 +25,8 @@ export default function FeaturedProfile() {
         bgcolor: 'rgba(16,14,24,0.45)',
         backdropFilter: 'blur(6px)',
         borderRadius: 1,
+        transition: 'transform .3s ease', 
+        '&:hover': { transform: 'scale(1.05)' }, 
       }}>
         <Avatar
           src={src}
@@ -37,8 +39,6 @@ export default function FeaturedProfile() {
             cursor: 'pointer', 
             boxShadow: '0 10px 30px rgba(124,58,237,0.35)', 
             border: '2px solid rgba(183,148,244,0.5)', 
-            transition: 'transform .3s ease', 
-            '&:hover': { transform: 'scale(1.05)' }, 
             borderRadius: 1 
           }}
         >R</Avatar>
