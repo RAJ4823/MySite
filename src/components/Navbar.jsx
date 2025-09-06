@@ -54,7 +54,7 @@ export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
                 height: 80,
                 margin: '-10px',
                 cursor: 'pointer',
-                filter: 'contrast(1.2)',
+                filter: 'contrast(1) saturate(4)',
                 '&:hover': {
                   opacity: 0.8,
                   transition: 'opacity 0.2s ease-in-out',

@@ -12,10 +12,9 @@ export const TECH_SKILLS_DATA = [
 ];
 
 export const SOFT_SKILLS_DATA = [
-  'Leadership', 
-  'Problem-Solving', 
-  'Teamwork', 
-  'Creativity', 
-  'Attention to Details', 
-  'Adaptability'
+  { skill: 'Leadership', color: '#00ff95' },
+  { skill: 'Teamwork', color: '#e361ff' },
+  { skill: 'Creativity', color: '#5578ff' },
+  { skill: 'Attention to Details', color: '#ffbb2c' },
+  { skill: 'Adaptability', color: '#ff5e00' }
 ];
