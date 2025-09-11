@@ -8,7 +8,7 @@ const ProjectsSection = ({ onProjectOpen }) => {
 
   return (
     <>
-      <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>Featured Projects</Typography>
+      <Typography variant="h4" sx={{ fontWeight: 800, mb: 4 }}>Featured Projects</Typography>
       <Grid container spacing={3} justifyContent="space-around">
         {projects.map(([key, project]) => (
           <Grid item key={key} xs={12} sm={6} md={3} lg={3}>

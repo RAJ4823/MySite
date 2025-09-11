@@ -5,7 +5,7 @@ import { EDUCATION_DATA } from '../data/education';
 const EducationSection = () => {
   return (
     <>
-      <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>Education</Typography>
+      <Typography variant="h4" sx={{ fontWeight: 800, mb: 4 }}>Education</Typography>
       <Timeline 
         items={EDUCATION_DATA}
         renderItem={(edu) => (

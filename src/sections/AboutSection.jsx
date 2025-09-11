@@ -40,17 +40,17 @@ export default function AboutSection() {
   return (
     <>
       <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>About Me</Typography>
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} alignItems={{ xs: 'flex-start', sm: 'stretch' }}>
+      <Stack direction={{ sm: 'column', md: 'row' }} spacing={3} alignItems={{ xs: 'flex-start', md: 'stretch' }}>
         {/* Left: Image */}
-        <Box sx={{ flexGrow: 0, flexShrink: 0, flexBasis: { xs: '100%', sm: 340 }, maxWidth: { xs: '100%', sm: 380 } }}>
+        <Box sx={{ flexGrow: 0, flexShrink: 0, flexBasis: { xs: '100%', md: 380 }, width: { xs: '100%', md: 380 } }}>
           <FeaturedProfile />
         </Box>
         {/* Right: Intro then Personal Info below */}
-        <Box sx={{ flexBasis: { xs: '100%', sm: 'auto' }, flexGrow: 1, minWidth: 0 }}>
+        <Box sx={{ flexBasis: { xs: '100%', md: 'auto' }, flexGrow: 1, minWidth: 0 }}>
           <Typography variant="overline" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontSize: '1rem', fontWeight: 600 }}>Hello...</Typography>
           <Box>
             {ABOUT_ME_DATA.introduction.map((p, i) => (
-              <Typography key={i} sx={{ mb: 1.2 }}>{p}</Typography>
+              <Typography key={i} sx={{ mb: 1.2, textAlign: 'justify' }}>{p}</Typography>
             ))}
           </Box>
           <Box sx={{ mt: 2 }}>

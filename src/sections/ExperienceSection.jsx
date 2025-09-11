@@ -5,7 +5,7 @@ import { EXPERIENCE_DATA } from '../data/experience';
 const ExperienceSection = () => {
   return (
     <>
-      <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>Experience</Typography>
+      <Typography variant="h4" sx={{ fontWeight: 800, mb: 4 }}>Experience</Typography>
       <Timeline 
         items={EXPERIENCE_DATA}
         renderItem={(exp) => (

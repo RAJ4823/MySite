@@ -154,7 +154,7 @@ const ProjectModal = memo(({ open, onClose, projectKey, project }) => {
             <Typography variant="overline" color="text.secondary">
               {project.category} • {project.date}
             </Typography>
-            <Typography variant="body1" sx={{ mt: 1.5, lineHeight: 1.6 }}>
+            <Typography variant="body1" sx={{ mt: 1.5, lineHeight: 1.6, textAlign: 'justify' }}>
               {project.description}
             </Typography>
             <Button 

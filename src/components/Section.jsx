@@ -36,9 +36,9 @@ export default function Section({
                     borderRadius: 1,
                     border: '1px solid',
                     borderColor: 'rgba(124,58,237,0.35)',
-                    bgcolor: 'rgba(16,14,24,0.45)',
+                    bgcolor: { xs: 'rgba(16,14,24,0.9)', md: 'rgba(16,14,24,0.45)' },
                     boxShadow: '0 10px 30px rgba(124,58,237,0.15)',
-                    backdropFilter: { xs: 'blur(4px)', md: 'blur(6px)' },
+                    backdropFilter: 'blur(6px)'
                   }
                 : {}),
               ...contentSx,

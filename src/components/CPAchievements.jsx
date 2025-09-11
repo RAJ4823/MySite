@@ -50,9 +50,9 @@ function CountUp({ end, start, duration = 1200, color }) {
 export default function CPAchievements() {
   const [rootRef, inView] = useInView({ threshold: 0.35 });
   return (
-    <Grid container spacing={3} justifyContent="space-between" ref={rootRef}>
+    <Grid container spacing={3} justifyContent="space-around" ref={rootRef}>
       {CP_ACHIEVEMENTS_DATA.map((a) => (
-        <Grid item key={a.name} xs={12} sm={12} md={6} width="22%">
+        <Grid item key={a.name} xs={12} sm={12} md={6} width={{ md: '22%', xs: '46%' }}>
           <Link href={a.link} target="_blank" rel="noopener" underline="none" sx={{ display: 'block', height: '100%' }}>
             <Paper
               variant="outlined"

@@ -6,7 +6,11 @@ import ScrollHint from '../components/ScrollHint';
 export default function HomeSection() {
   return (
     <>
-      <Box sx={{ minHeight: { xs: '92vh', md: 'calc(100vh - 80px)' }, display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ 
+        minHeight: { xs: '92vh', md: 'calc(100vh - 80px)' }, 
+        display: 'flex', 
+        alignItems: 'center' 
+      }}>
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12} md={6}>
             <Typography variant="h6" color="text.secondary">Hello, I am</Typography>

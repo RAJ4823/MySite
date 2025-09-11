@@ -39,8 +39,8 @@ function TechCard({ name, color, iconify }) {
         onTouchStart={() => setHover(true)}
         onTouchEnd={() => setHover(false)}
         sx={{
-          width: 80,
-          height: 80,
+          width: { xs: 60, md: 80 },
+          height: { xs: 60, md: 80 },
           borderRadius: 2,
           border: '1px solid',
           borderColor: 'rgba(124,58,237,0.35)',
@@ -61,8 +61,8 @@ function TechCard({ name, color, iconify }) {
           <img
             src={`https://api.iconify.design/${iconify}.svg`}
             alt={name}
-            width={50}
-            height={50}
+            width='70%'
+            height='70%'
             style={{ display: 'block', filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.35))' }}
             loading="lazy"
             onError={(e) => { e.currentTarget.style.opacity = '0.6'; }}
@@ -81,7 +81,7 @@ export default function TechStack() {
       mt: 1,
       mx: 'auto',
       display: "flex",
-      justifyContent: "left",
+      justifyContent: { xs: 'space-around', sm: 'left' },
       alignItems: "center",
       flexWrap: "wrap",
       gap: 2,
