@@ -105,12 +105,14 @@ export const SATURN_RING = {
   innerFactor: 1.8,
   outerFactor: 2.6,
   material: {
-    opacity: 0.95,
+    opacity: 1,
     alphaTest: 0.15,
     depthWrite: false,
     doubleSide: true,
   },
-  // Preferred texture mapping for saturn_ring.png (top=inner, bottom=outer)
+  // Number of times to tile the vertical strip texture around the ring (U direction)
+  tiles: 48,
+  // Legacy mapping (kept for fallback); code prefers tiles-based setup
   mapping: {
     repeat: [1, -1],
     offset: [0, 1],

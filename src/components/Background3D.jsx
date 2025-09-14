@@ -236,15 +236,20 @@ function SolarSystem({ useTextures = false, showEquators = false }) {
         if (max) t.anisotropy = max;
         if ('colorSpace' in t) t.colorSpace = THREE.SRGBColorSpace; else if ('encoding' in t) t.encoding = THREE.sRGBEncoding;
       });
-      // Saturn ring UV mapping per constants
+      // Saturn ring texture: shader handles mapping, so keep neutral texture settings
       if (tex.saturnRing) {
-        tex.saturnRing.wrapS = tex.saturnRing.wrapT = THREE.RepeatWrapping;
-        const [ru, rv] = SATURN_RING.mapping.repeat;
-        const [ou, ov] = SATURN_RING.mapping.offset;
-        tex.saturnRing.repeat.set(ru, rv);
-        tex.saturnRing.offset.set(ou, ov);
         tex.saturnRing.center.set(0.5, 0.5);
-        tex.saturnRing.rotation = SATURN_RING.mapping.rotation || 0;
+        tex.saturnRing.rotation = 0;
+        tex.saturnRing.wrapS = THREE.ClampToEdgeWrapping;
+        tex.saturnRing.wrapT = THREE.ClampToEdgeWrapping;
+        tex.saturnRing.repeat.set(1, 1);
+        tex.saturnRing.offset.set(0, 0);
+        tex.saturnRing.minFilter = THREE.LinearFilter;
+        tex.saturnRing.magFilter = THREE.LinearFilter;
+        tex.saturnRing.generateMipmaps = false;
+        tex.saturnRing.premultiplyAlpha = true;
+        if ('format' in tex.saturnRing) tex.saturnRing.format = THREE.RGBAFormat;
+        tex.saturnRing.flipY = false;
         tex.saturnRing.needsUpdate = true;
       }
     } catch {}
@@ -442,20 +447,62 @@ function SolarSystem({ useTextures = false, showEquators = false }) {
                 </group>
               )}
               {p.ring && (
-                <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-                  <ringGeometry args={[p.r * 1.8, p.r * 2.6, 128]} />
-                  {useTextures ? (
-                    <meshStandardMaterial
-                      map={tex.saturnRing}
-                      transparent
-                      opacity={0.95}
-                      side={THREE.DoubleSide}
-                      alphaTest={0.15}
-                      depthWrite={false}
-                    />
-                  ) : (
-                    <meshStandardMaterial color="#d7c8a5" opacity={0.6} transparent side={2} />
-                  )}
+                <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.0001, 0]} receiveShadow renderOrder={2}>
+                  {(() => {
+                    const inner = p.r * SATURN_RING.innerFactor;
+                    const outer = p.r * SATURN_RING.outerFactor;
+                    return (
+                      <>
+                        <ringGeometry args={[inner, outer, 256]} />
+                        {useTextures ? (
+                          <shaderMaterial
+                            key={`${p.name}-ring-shader`}
+                            transparent
+                            depthWrite={false}
+                            side={THREE.DoubleSide}
+                            polygonOffset
+                            polygonOffsetFactor={-2}
+                            polygonOffsetUnits={-2}
+                            uniforms={{
+                              uTex: { value: tex.saturnRing },
+                              uInner: { value: inner },
+                              uOuter: { value: outer },
+                              uSwap: { value: tex?.saturnRing?.image && tex.saturnRing.image.height > tex.saturnRing.image.width ? 1.0 : 0.0 },
+                            }}
+                            vertexShader={`
+                              precision mediump float;
+                              uniform float uInner;
+                              uniform float uOuter;
+                              varying vec3 vLocalPos;
+                              void main() {
+                                vLocalPos = position;
+                                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                              }
+                            `}
+                            fragmentShader={`
+                              precision mediump float;
+                              uniform sampler2D uTex;
+                              uniform float uInner;
+                              uniform float uOuter;
+                              uniform float uSwap; // 1.0 means swap axes
+                              varying vec3 vLocalPos;
+                              void main() {
+                                float r = length(vLocalPos.xy);
+                                float t = (r - uInner) / max(uOuter - uInner, 1e-6);
+                                if (t < 0.0 || t > 1.0) discard;
+                                vec2 uv = mix(vec2(t, 0.5), vec2(0.5, t), step(0.5, uSwap));
+                                vec4 col = texture2D(uTex, uv);
+                                if (col.a < 0.01) discard;
+                                gl_FragColor = col;
+                              }
+                            `}
+                          />
+                        ) : (
+                          <meshStandardMaterial color="#d7c8a5" opacity={0.6} transparent side={THREE.DoubleSide} />
+                        )}
+                      </>
+                    );
+                  })()}
                 </mesh>
               )}
             </group>
