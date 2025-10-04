@@ -37,7 +37,7 @@ export default function FeaturedProfile() {
           onClick={next}
           onError={(e) => { e.currentTarget.src = ''; }}
           sx={{
-            width: { xs: 'max-content' },
+            width: { xs: 240, sm: 260, md: 280, lg: 300 },
             height: { xs: 300, sm: 350, md: 380, lg: 400 },
             m: '0 auto',
             cursor: 'pointer',

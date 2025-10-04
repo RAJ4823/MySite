@@ -2,7 +2,7 @@ export const ABOUT_ME_DATA = {
   title: 'Hello...',
   tags: [
     "Associate Software Engineer @Yubi", 
-    "Ex Tech Lead @ZeroToZee", 
+    // "Ex Tech Lead @ZeroToZee", 
     "2x College Gold Medalist", 
     "Knight @LeetCode with 800+ AC"
   ],
