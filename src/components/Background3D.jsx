@@ -688,36 +688,41 @@ export default function Background3D({ mode = 'background' }) {
   // Preload all texture assets; render flat first, then switch to textures when all are loaded
   useEffect(() => {
     let canceled = false;
+    
+    // Get all texture URLs to preload
     const required = [
-      '/textures/planets/mercury.jpg',
-      '/textures/planets/venus.jpg',
-      '/textures/planets/earth.jpg',
-      '/textures/planets/mars.jpg',
-      '/textures/planets/jupiter.jpg',
-      '/textures/planets/saturn.jpg',
-      '/textures/planets/uranus.jpg',
-      '/textures/planets/neptune.jpg',
-      '/textures/planets/saturn_ring.png',
+      ...Object.values(PLANET_TEXTURES),
+      ...Object.values(EXTRA_TEXTURES)
     ];
-    const optional = ['/textures/sun.jpg', '/textures/moon.jpg', '/textures/milkyway.jpg'];
+
     const loadImage = (src) => new Promise((resolve, reject) => {
+      if (!src) return resolve(true); // Skip empty sources
+      
       const im = new Image();
       im.onload = () => resolve(true);
-      im.onerror = () => reject(new Error('fail ' + src));
+      im.onerror = (e) => {
+        console.warn('Failed to load texture:', src, e);
+        resolve(false); // Don't reject, just mark as failed
+      };
       im.src = src;
     });
-    // Load required planet textures. Optional extras don't block readiness.
+
+    // Load textures
     Promise.all(required.map(loadImage))
-      .then(() => { if (!canceled) setTexturesReady(true); })
-      .catch(() => { if (!canceled) setTexturesReady(false); });
-    // Fire optional loads but ignore outcome
-    optional.forEach((u) => loadImage(u).catch(() => {}));
+      .then((results) => {
+        const successCount = results.filter(Boolean).length;
+        console.log(`Successfully loaded ${successCount}/${required.length} textures`);
+        if (!canceled) {
+          setTexturesReady(successCount === required.length);
+        }
+      })
+      .catch(console.warn);
+
     return () => { canceled = true; };
   }, []);
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: mode === 'interactive' ? 50 : 0, pointerEvents: mode === 'interactive' ? 'auto' : 'none' }}>
       <Canvas
-        shadows={{ type: THREE.PCFSoftShadowMap }}
         gl={{ physicallyCorrectLights: true }}
         camera={{ position: DEFAULT_CAM, fov: CAMERA.fov }}
       >

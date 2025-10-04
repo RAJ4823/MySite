@@ -10,7 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
 export default function ProjectCard({ projectKey, project, onOpen }) {
-  const imgSrc = `/images/portfolio/${projectKey}.jpg`;
+  const imgSrc = `${import.meta.env.VITE_BASE_URL || '/'}images/portfolio/${projectKey}.jpg`;
   return (
     <Card
       variant="outlined"

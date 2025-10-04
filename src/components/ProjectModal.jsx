@@ -90,7 +90,7 @@ const ProjectModal = memo(({ open, onClose, projectKey, project }) => {
   }, [open]);
 
   if (!project) return null;
-  const imgSrc = `/images/portfolio/${projectKey}.jpg`;
+  const imgSrc = `${import.meta.env.VITE_BASE_URL || '/'}images/portfolio/${projectKey}.jpg`;
 
   const handleClose = (event, reason) => {
     if (reason === 'backdropClick' || reason === 'escapeKeyDown') {

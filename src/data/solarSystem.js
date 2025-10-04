@@ -6,21 +6,26 @@ export const DEFAULT_CAM = [8.592502439957185, 2.247226468071675, -7.90004483334
 export const DEFAULT_TARGET = [2.8, 0, -4];
 
 // Texture paths (relative to public/)
+const BASE_URL = import.meta.env.VITE_BASE_URL || '/';
+
+// Planet textures (used in useTexture hook)
 export const PLANET_TEXTURES = {
-  mercury: '/textures/planets/mercury.jpg',
-  venus: '/textures/planets/venus.jpg',
-  earth: '/textures/planets/earth.jpg',
-  mars: '/textures/planets/mars.jpg',
-  jupiter: '/textures/planets/jupiter.jpg',
-  saturn: '/textures/planets/saturn.jpg',
-  uranus: '/textures/planets/uranus.jpg',
-  neptune: '/textures/planets/neptune.jpg',
-  saturnRing: '/textures/planets/saturn_ring.png',
+  mercury: `${BASE_URL}textures/planets/mercury.jpg`,
+  venus: `${BASE_URL}textures/planets/venus.jpg`,
+  earth: `${BASE_URL}textures/planets/earth.jpg`,
+  mars: `${BASE_URL}textures/planets/mars.jpg`,
+  jupiter: `${BASE_URL}textures/planets/jupiter.jpg`,
+  saturn: `${BASE_URL}textures/planets/saturn.jpg`,
+  uranus: `${BASE_URL}textures/planets/uranus.jpg`,
+  neptune: `${BASE_URL}textures/planets/neptune.jpg`,
+  saturnRing: `${BASE_URL}textures/planets/saturn_ring.png`,
 };
+
+// Other textures
 export const EXTRA_TEXTURES = {
-  sun: '/textures/sun.jpg',
-  moon: '/textures/moon.jpg',
-  milkyway: '/textures/milkyway.jpg',
+  sun: `${BASE_URL}textures/sun.jpg`,
+  moon: `${BASE_URL}textures/moon.jpg`,
+  milkyway: `${BASE_URL}textures/milkyway.jpg`
 };
 
 // Sun

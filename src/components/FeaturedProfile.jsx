@@ -13,7 +13,7 @@ export default function FeaturedProfile() {
 
   const next = () => setIdx((i) => (i + 1) % imgList.length);
 
-  const src = `/images/profile/${imgList[idx]}`;
+  const src = `${import.meta.env.VITE_BASE_URL || '/'}images/profile/${imgList[idx]}`;
 
   return (
     <Box sx={{

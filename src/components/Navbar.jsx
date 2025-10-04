@@ -56,7 +56,7 @@ export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
           <div onClick={() => go('home')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
             <Box
               component="img"
-              src="/images/logo/purple_logo.png"
+              src={`${import.meta.env.VITE_BASE_URL || '/'}images/logo/purple_logo.png`}
               alt="Logo"
               sx={{
                 height: { xs: 56, sm: 72, md: 80 },
