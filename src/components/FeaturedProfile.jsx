@@ -17,7 +17,7 @@ export default function FeaturedProfile() {
 
   return (
     <Box sx={{
-      p: 3,
+      p: 1,
       textAlign: 'center',
       width: { xs: '100%', lg: 'min-content' },
     }}>

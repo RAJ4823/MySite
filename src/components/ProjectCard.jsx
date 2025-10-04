@@ -15,7 +15,10 @@ export default function ProjectCard({ projectKey, project, onOpen }) {
     <Card
       variant="outlined"
       sx={{
+        width: '100%',
+        maxWidth: { xs: '100%', md: '350px', lg: '300px' },
         height: '100%',
+        margin: '0 auto',
         display: 'flex',
         flexDirection: 'column',
         bgcolor: 'rgba(255,255,255,0.03)',

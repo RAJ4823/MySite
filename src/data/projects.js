@@ -8,6 +8,7 @@ export const PROJECTS_DATA = {
     description:
       'A MERN stack-based login system with user registration, secure authentication, profile management, password recovery with OTP, and email notifications, and more.',
     filter: ['react', 'superverse'],
+    display: true,
   },
   'weather-site': {
     title: 'Weather Site',
@@ -18,6 +19,7 @@ export const PROJECTS_DATA = {
     description:
       'You can get up-to-date, accurate weather information with a 48-hour forecast for any city using WeatherSite. It has a slick, modern design, a lovely user interface, and dynamic backgrounds that change depending on the weather.',
     filter: ['react', 'superverse'],
+    display: true,
   },
   'super-snake': {
     title: 'SuperSnake',
@@ -28,6 +30,7 @@ export const PROJECTS_DATA = {
     description:
       "SuperSnake is an engaging and addictive snake game that offers captivating game environment where players can control the snake's movement using their mouse/touchpad. With visually appealing graphics, smooth controls, and immersive audio, SuperSnake delivers an enjoyable and challenging gaming experience.",
     filter: ['bootstrap', 'superverse'],
+    display: true,
   },
   notesnap: {
     title: 'NoteSnap',
@@ -38,6 +41,7 @@ export const PROJECTS_DATA = {
     description:
       "It is a Chrome Extension for taking note of important details on any website. You can quickly highlight and save any text with just one click. You can also copy, delete or download notes. With NoteSnap, you'll never lose important information again.",
     filter: ['extension'],
+    display: true,
   },
   'super-notes': {
     title: 'SuperNotes',
@@ -48,6 +52,7 @@ export const PROJECTS_DATA = {
     description:
       'SuperNotes allows you to manage your notes. You can add, delete, edit or can search the notes. It has incredible 5 themes with light mode and dark mode.',
     filter: ['bootstrap', 'superverse'],
+    display: true,
   },
   'my-site': {
     title: 'My Site',
@@ -58,6 +63,7 @@ export const PROJECTS_DATA = {
     description:
       'You can see how good it is, but for details it is a bootstrap based portfolio website of mine. It consists a great UI and design. It is a fully responsive website. Current version is 2.0\n\nThis is an easter egg and you found it. 🥳',
     filter: ['bootstrap', 'superverse'],
+    display: true,
   },
   'super-calculator': {
     title: 'SuperCalculator',
@@ -68,6 +74,7 @@ export const PROJECTS_DATA = {
     description:
       'Simple calculator made with HTML, CSS & JS. It has color-changing background which looks awsome.',
     filter: ['bootstrap', 'superverse'],
+    display: false,
   },
   nmhp: {
     title: 'NMHP',
@@ -78,6 +85,7 @@ export const PROJECTS_DATA = {
     description:
       'NMHP means National Medical & Health Portal. It is a SIH 2022 project. Our main aim was to reduce exploitations happening in the hospitals with the help of website. This UI describes the working of our website.',
     filter: ['ui'],
+    display: true,
   },
   'student-portfolio': {
     title: 'Student Portfolio',
@@ -87,6 +95,7 @@ export const PROJECTS_DATA = {
     shortDescription: "Figma design of Student's Portfolio",
     description: 'Student Portfolio UI made on FIGMA. It contains both desktop view and mobile view.',
     filter: ['ui'],
+    display: false,
   },
   'email-phone-extractor': {
     title: 'Email & Phone Extractor',
@@ -97,5 +106,6 @@ export const PROJECTS_DATA = {
     description:
       'It is a chrome Extension for extracting all Emails and Phone Numbers from a web page. You can download it as .txt or .csv file.',
     filter: ['extension'],
+    display: false,
   },
 };

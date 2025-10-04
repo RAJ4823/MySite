@@ -9,17 +9,40 @@ const ProjectsSection = ({ onProjectOpen }) => {
   return (
     <>
       <Typography variant="h4" sx={{ fontWeight: 800, mb: 4 }}>Featured Projects</Typography>
-      <Grid container spacing={3} justifyContent="space-around">
-        {projects.map(([key, project]) => (
-          <Grid item key={key} xs={12} sm={6} md={3} lg={3}>
+      <Box sx={{ 
+        display: 'grid',
+        gridTemplateColumns: { 
+          xs: '1fr', 
+          sm: 'repeat(auto-fill, minmax(280px, 1fr))',
+          lg: 'repeat(auto-fill, minmax(300px, 1fr))' 
+        },
+        gap: 3,
+        width: '100%',
+        '& > *:first-of-type': {
+          justifySelf: 'flex-start',
+        },
+        '& > *:last-child': {
+          justifySelf: 'flex-end',
+        },
+        '& > *:not(:first-of-type):not(:last-child)': {
+          justifySelf: 'center',
+          '@media (min-width: 1200px)': {
+            justifySelf: 'center',
+            margin: '0 auto',
+          },
+        },
+      }}>
+        {projects.map(([key, project]) => 
+          project.display && (
             <ProjectCard 
+              key={key}
               projectKey={key} 
               project={project} 
-              onOpen={onProjectOpen} 
+              onOpen={onProjectOpen}
             />
-          </Grid>
-        ))}
-      </Grid>
+          )
+        )}
+      </Box>
     </>
   );
 };

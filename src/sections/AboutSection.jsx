@@ -40,23 +40,34 @@ export default function AboutSection() {
   return (
     <>
       <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>About Me</Typography>
-      <Stack direction={{ sm: 'column', md: 'row' }} spacing={3} alignItems={{ xs: 'flex-start', md: 'stretch' }}>
+      <Box sx={{ mt: 2 }}>
+        <Typography variant="overline" color="text.primary" sx={{ display: 'block', mb: 0.5, fontSize: '1.2rem', fontWeight: 600 }}>I am...</Typography>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
+          {ABOUT_ME_DATA.tags.map((t, i) => (
+            <ColorChip key={i} label={t} color="#B798FF" size="medium" variant="outlined" />
+          ))}
+        </Box>
+      </Box>
+
+      <Stack sx={{ mt: 2 }} direction={{ sm: 'column', md: 'row' }} spacing={3} alignItems={{ xs: 'flex-start', md: 'stretch' }}>
         {/* Left: Image */}
-        <Box sx={{ flexGrow: 0, flexShrink: 0, flexBasis: { xs: '100%', md: 380 }, width: { xs: '100%', md: 380 } }}>
+        <Box sx={{ flexGrow: 0, flexShrink: 0, flexBasis: { xs: '100%', md: 300 }, width: { xs: '100%' } }}>
           <FeaturedProfile />
         </Box>
         {/* Right: Intro then Personal Info below */}
-        <Box sx={{ flexBasis: { xs: '100%', md: 'auto' }, flexGrow: 1, minWidth: 0 }}>
-          <Typography variant="overline" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontSize: '1rem', fontWeight: 600 }}>Hello...</Typography>
-          <Box>
+        <Box sx={{ flexBasis: { xs: '100%', md: 'auto' }, flexGrow: 1, minWidth: 0, mt: 2 }}>
+          <Box sx={{ mt: { xs: 2, md: 4 } }}>
             {ABOUT_ME_DATA.introduction.map((p, i) => (
-              <Typography key={i} sx={{ mb: 1.2, textAlign: 'justify' }}>{p}</Typography>
+              <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 0.5 }}>
+                <KeyboardArrowRightRoundedIcon fontSize="small" sx={{ color: 'primary.light' }} />
+                <Typography variant="body2" sx={{ mr: 1 }}>{p}</Typography>
+              </Box>
             ))}
           </Box>
           <Box sx={{ mt: 2 }}>
             {ABOUT_ME_DATA.personalInfo.map((row) => (
               <Box key={row.label} sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 0.5 }}>
-                <KeyboardArrowRightRoundedIcon fontSize="small" sx={{ color: 'text.secondary' }} />
+                <KeyboardArrowRightRoundedIcon fontSize="small" sx={{ color: 'primary.light' }} />
                 <Typography variant="body2" sx={{ fontWeight: 700, mr: 1 }}>{row.label}:</Typography>
                 <Typography variant="body2" sx={{ opacity: 0.9 }}>{row.value}</Typography>
               </Box>
@@ -66,7 +77,7 @@ export default function AboutSection() {
       </Stack>
 
       <Box sx={{ mt: 2 }}>
-        <Typography variant="overline" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontSize: '1rem', fontWeight: 600 }}>Social Profiles</Typography>
+        <Typography variant="overline" color="text.primary" sx={{ display: 'block', mb: 0.5, fontSize: '1rem', fontWeight: 600 }}>Social Profiles</Typography>
         <Box>
           <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
             {SOCIAL_PROFILES_DATA.map((s) => {
@@ -90,7 +101,7 @@ export default function AboutSection() {
       </Box>
 
       <Box sx={{ mt: 2 }}>
-        <Typography variant="overline" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontSize: '1rem', fontWeight: 600 }}>CP Profiles</Typography>
+        <Typography variant="overline" color="text.primary" sx={{ display: 'block', mb: 0.5, fontSize: '1rem', fontWeight: 600 }}>CP Profiles</Typography>
         <Box>
           <Stack direction="row" sx={{ mt: 1, flexWrap: 'wrap', gap: 1 }}>
             {CP_PROFILES_DATA.map((cp) => (
@@ -112,7 +123,7 @@ export default function AboutSection() {
       </Box>
 
       <Box sx={{ mt: 2 }}>
-        <Typography variant="overline" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontSize: '1rem', fontWeight: 600 }}>Interests</Typography>
+        <Typography variant="overline" color="text.primary" sx={{ display: 'block', mb: 0.5, fontSize: '1rem', fontWeight: 600 }}>Interests</Typography>
         <Box>
           <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
             {INTERESTS_DATA.map((i) => {

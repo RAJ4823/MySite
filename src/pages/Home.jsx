@@ -17,6 +17,7 @@ import {
   SkillsSection,
   ProjectsSection
 } from '../sections';
+import ScrollHint from '../components/ScrollHint';
 
 
 export default function Home() {
