@@ -4,7 +4,7 @@ import ProjectCard from '../components/ProjectCard';
 
 const ProjectsSection = ({ onProjectOpen }) => {
   const entries = Object.entries(PROJECTS_DATA);
-  const projects = entries.slice(0, 6);
+  const projects = entries;
 
   return (
     <>

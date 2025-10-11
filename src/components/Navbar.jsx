@@ -82,7 +82,7 @@ export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
                 </Button>
               ))}
               {onOpenSolar && (
-                <Button variant="contained" color="secondary" onClick={onOpenSolar} sx={{ fontWeight: 700, ml: 1 }}>
+                <Button variant="outlined" color="secondary" onClick={onOpenSolar} sx={{ fontWeight: 700, ml: 1 }}>
                   View Solar System
                 </Button>
               )}
@@ -118,7 +118,7 @@ export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
                 {onOpenSolar && (
                   <Box sx={{ px: 1.5, py: 1 }}>
                     <Button
-                      variant="contained"
+                      variant="outlined"
                       color="secondary"
                       onClick={() => { setAnchorEl(null); onOpenSolar?.(); }}
                       fullWidth
@@ -134,8 +134,8 @@ export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
 
           {/* Overlay back button (always right) */}
           {overlay && (
-            <Button variant="contained" color="secondary" onClick={onBack} sx={{ fontWeight: 700 }}>
-              Back to main page
+            <Button variant="outlined" color="secondary" onClick={onBack} sx={{ fontWeight: 700 }}>
+              Back to MySite
             </Button>
           )}
         </Toolbar>
