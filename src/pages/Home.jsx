@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Box, Grid, Typography, Paper } from '@mui/material';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -25,8 +25,48 @@ export default function Home() {
   const projects = entries.slice(0, 6);
   const [openKey, setOpenKey] = useState(null);
   const [solarOpen, setSolarOpen] = useState(false);
+  const audioRef = useRef(null);
+  const audioSrc = `${import.meta.env.VITE_BASE_URL || '/'}sounds/interstellar_stay.mp3`;
+
+  // Optional: prepare audio only after the whole page has loaded (no autoplay)
+  useEffect(() => {
+    const onWindowLoad = () => {
+      if (!audioRef.current) {
+        const a = new Audio(audioSrc);
+        a.loop = true;
+        a.preload = 'auto'; // allow browser to fetch after load
+        a.volume = 0.5;
+        audioRef.current = a;
+      }
+      window.removeEventListener('load', onWindowLoad);
+    };
+    window.addEventListener('load', onWindowLoad);
+    return () => window.removeEventListener('load', onWindowLoad);
+  }, [audioSrc]);
   const selected = openKey ? PROJECTS_DATA[openKey] : null;
 
+  const playMusic = () => {
+    try {
+      let a = audioRef.current;
+      if (!a) {
+        // Lazy instantiate on first user interaction
+        a = new Audio(audioSrc);
+        a.loop = true;
+        a.preload = 'auto';
+        a.volume = 0.5;
+        audioRef.current = a;
+      }
+      a.currentTime = 0;
+      a.play().catch(() => {});
+    } catch {}
+  };
+
+  const stopMusic = () => {
+    try {
+      const a = audioRef.current;
+      if (a) { a.pause(); a.currentTime = 0; }
+    } catch {}
+  };
   // Optimize blur performance by using transform and will-change
   const blurStyle = {
     position: 'relative',
@@ -52,6 +92,7 @@ export default function Home() {
           <Navbar
             overlay
             onBack={() => {
+              stopMusic();
               setSolarOpen(false);
               setTimeout(() => window.dispatchEvent(new CustomEvent('solar_cam_updated')), 50);
             }}
@@ -60,7 +101,10 @@ export default function Home() {
         </Box>
       )}
       <Box sx={blurStyle}>
-        <Navbar onOpenSolar={() => setSolarOpen(true)} />
+        <Navbar onOpenSolar={() => {
+          playMusic();
+          setSolarOpen(true);
+        }} />
 
       <Section id="home" glass={false}>
         <HomeSection />
