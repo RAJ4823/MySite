@@ -129,6 +129,20 @@ function Comets({ small = true, center = DEFAULT_TARGET, count = COMETS_CONST.co
   );
 }
 
+// Loads three.js textures only when mounted and passes them to SolarSystem.
+function SolarSystemTexturedLoader({ showEquators = false, onReady }) {
+  const tex = useTexture(PLANET_TEXTURES);
+  const extra = useTexture(EXTRA_TEXTURES);
+  // Signal ready on next frame after textures are available and component mounted
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      try { onReady && onReady(); } catch {}
+    });
+    return () => cancelAnimationFrame(id);
+  }, [onReady]);
+  return <SolarSystem useTextures={true} showEquators={showEquators} tex={tex} extra={extra} />;
+}
+
 function AsteroidBelt({ center, inner = ASTEROID_BELT.defaultInner, outer = ASTEROID_BELT.defaultOuter, count = ASTEROID_BELT.defaultCount }) {
   const group = useRef();
 
@@ -215,19 +229,16 @@ function AsteroidBelt({ center, inner = ASTEROID_BELT.defaultInner, outer = ASTE
   );
 }
 
-function SolarSystem({ useTextures = false, showEquators = false }) {
+function SolarSystem({ useTextures = false, showEquators = false, tex = null, extra = null }) {
   // Single solar system, slightly to the right
   const center = DEFAULT_TARGET;
 
-  // Planet textures from local public folder (medium quality recommended: 1k–2k)
-  const tex = useTextures ? useTexture(PLANET_TEXTURES) : {};
-  // Extra textures (optional): sun, moon, milky way background
-  const extra = useTextures ? useTexture(EXTRA_TEXTURES) : {};
+  // When not using textures, tex/extra can be null; code must branch accordingly
 
   // Improve texture clarity on oblique angles (AF) and color space. No-op when textures disabled.
   const { gl } = useThree();
   useEffect(() => {
-    if (!useTextures) return;
+    if (!useTextures || !tex || !extra) return;
     try {
       const max = Math.min(8, gl?.capabilities?.getMaxAnisotropy?.() || 0);
       const all = [...Object.values(tex), ...Object.values(extra)];
@@ -237,7 +248,7 @@ function SolarSystem({ useTextures = false, showEquators = false }) {
         if ('colorSpace' in t) t.colorSpace = THREE.SRGBColorSpace; else if ('encoding' in t) t.encoding = THREE.sRGBEncoding;
       });
       // Saturn ring texture: shader handles mapping, so keep neutral texture settings
-      if (tex.saturnRing) {
+      if (tex?.saturnRing) {
         tex.saturnRing.center.set(0.5, 0.5);
         tex.saturnRing.rotation = 0;
         tex.saturnRing.wrapS = THREE.ClampToEdgeWrapping;
@@ -258,6 +269,7 @@ function SolarSystem({ useTextures = false, showEquators = false }) {
   // Compute realistic orbit distances using compressed sqrt(AU) scaling + collision-safe clearances.
   // This ensures no visual overlap even when a planet (esp. Saturn with rings) is closest to the Sun.
   const planets = useMemo(() => {
+    if (!PLANETS_DEF?.length) return [];
     const defs = PLANETS_DEF;
     const base = ORBIT_LAYOUT.base;
     const scale = ORBIT_LAYOUT.scale;
@@ -326,8 +338,12 @@ function SolarSystem({ useTextures = false, showEquators = false }) {
 
   // Precompute circular orbit points for rendering orbit lines (in XZ plane)
   const makeCircle = (radius) => {
+    if (radius === undefined || radius <= 0) {
+      console.warn('Invalid radius for orbit line:', radius);
+      return [];
+    }
     const pts = [];
-    const steps = ORBIT_LAYOUT.orbitLineSteps;
+    const steps = ORBIT_LAYOUT?.orbitLineSteps || 64; // Default to 64 steps if not defined
     for (let i = 0; i <= steps; i++) {
       const a = (i / steps) * Math.PI * 2;
       // xz circle; keep y at 0 for top-down view
@@ -389,7 +405,7 @@ function SolarSystem({ useTextures = false, showEquators = false }) {
       <pointLight position={[center[0], center[1], center[2]]} intensity={SUN.pointLight.intensity} distance={SUN.pointLight.distance} decay={SUN.pointLight.decay} />
 
       {/* Orbits and planets */}
-      {planets.map((p, i) => (
+      {planets?.map((p, i) => (
         <group key={p.name}>
           <Line
             points={makeCircle(p.orbitR).map(([x,y,z]) => [x + center[0], y + center[1], z + center[2]])}
@@ -684,6 +700,14 @@ function ApplySavedCamera() {
 export default function Background3D({ mode = 'background' }) {
   const controlsRef = useRef();
   const [texturesReady, setTexturesReady] = useState(false);
+  const [texMounted, setTexMounted] = useState(false);
+  const onTexFirstFrame = useRef(null);
+  if (!onTexFirstFrame.current) {
+    onTexFirstFrame.current = () => {
+      // Small delay so the textured scene has time to render a few frames before removing flat
+      setTimeout(() => setTexMounted(true), 250);
+    };
+  }
 
   // Preload all texture assets; render flat first, then switch to textures when all are loaded
   useEffect(() => {
@@ -739,17 +763,31 @@ export default function Background3D({ mode = 'background' }) {
           shadow-bias={LIGHTS.dir.shadow.bias}
         />
         <Stars radius={STARS_CONST.radius} depth={STARS_CONST.depth} count={STARS_CONST.count} factor={STARS_CONST.factor} saturation={STARS_CONST.saturation} fade={STARS_CONST.fade} speed={STARS_CONST.speed} />
+        {/* Comets temporarily disabled - causing rendering issues
         <Comets small={mode !== 'interactive'} />
+        */}
         {mode === 'background' && <ApplySavedCamera />}
-        {/* Load textured planets lazily; show non-textured until all images preloaded */}
-        {mode === 'interactive' ? (
-          <Suspense fallback={<SolarSystem useTextures={false} showEquators={false} />}>
-            <SolarSystem useTextures={texturesReady} showEquators={false} />
-          </Suspense>
-        ) : (
-          <SolarSystem useTextures={texturesReady} showEquators={false} />
+        {/* Background swap logic:
+            - Before texturesReady: flat only
+            - After texturesReady but before first textured frame: render both (flat stays visible)
+            - After textured mounted: textured only */}
+        {!texturesReady && (
+          <SolarSystem key="flat" useTextures={false} showEquators={false} />
         )}
-        {mode === 'interactive' && <ApplySavedCameraInteractive controlsRef={controlsRef} />}
+        {texturesReady && !texMounted && (
+          <>
+            <SolarSystem key="flat" useTextures={false} showEquators={false} />
+            <Suspense fallback={null}>
+              <SolarSystemTexturedLoader key="tex" showEquators={false} onReady={onTexFirstFrame.current} />
+            </Suspense>
+          </>
+        )}
+        {texturesReady && texMounted && (
+          <Suspense fallback={null}>
+            <SolarSystemTexturedLoader key="tex" showEquators={false} />
+          </Suspense>
+        )}
+          {mode === 'interactive' && <ApplySavedCameraInteractive controlsRef={controlsRef} />}
         {mode === 'interactive' && (
           <OrbitControls ref={controlsRef} makeDefault target={ORBIT_CONTROLS.target} enablePan={ORBIT_CONTROLS.enablePan} enableDamping dampingFactor={ORBIT_CONTROLS.dampingFactor} rotateSpeed={ORBIT_CONTROLS.rotateSpeed} zoomSpeed={ORBIT_CONTROLS.zoomSpeed} minDistance={ORBIT_CONTROLS.minDistance} maxDistance={ORBIT_CONTROLS.maxDistance} minPolarAngle={ORBIT_CONTROLS.minPolarAngle} maxPolarAngle={ORBIT_CONTROLS.maxPolarAngle} />
         )}
