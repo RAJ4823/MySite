@@ -6,7 +6,7 @@ export const EDUCATION_DATA = [
     location: 'Ahmedabad',
     achievements: [
       'Grade: 9.54 CGPA',
-      '2x Gold Medalist in college with highest CGPA; awarded by GTU & Dewang Mehta Trust in 3rd & 4th year.',
+      '2x Gold Medalist in college with highest CGPA, awarded by GTU & Dewang Mehta Trust in 3rd & 4th year.',
     ],
   },
   {
@@ -17,7 +17,6 @@ export const EDUCATION_DATA = [
     achievements: [
       'Percentage: 83.54%',
       'Topped school with 98.43 PR and A2 Grade.',
-      'Secured impressive ACPC rank of 862 in Gujarat.',
     ],
   },
   {

@@ -13,8 +13,8 @@ export const ABOUT_ME_DATA = {
     "I'm a team player who adapts quickly and contributes positively to the work environment.",
   ],
   personalInfo: [
+    { label: 'My Email', value: 'halpaniraj.hr4823@gmail.com' },
     { label: 'My Birthday', value: '4th August, 2003' },
     { label: 'Hometown', value: 'Mansa, Gandhinagar, Gujarat' },
-    { label: 'My Email', value: 'halpaniraj.hr4823@gmail.com' },
   ],
 };

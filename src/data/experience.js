@@ -1,11 +1,11 @@
 export const EXPERIENCE_DATA = [
   {
     company: 'Accumn - A Yubi Company',
+    location: 'Ahmedabad',
     roles: [
       {
         role: 'Associate Software Engineer',
         duration: 'Jun, 2024 - Present',
-        location: 'Ahmedabad',
         responsibilities: [
           'Owned and delivered high-quality features with strong accountability. Played a key role in team success.',
           'Mentored and assisted teammates — including senior engineers — with debugging and implementation.',
@@ -15,7 +15,6 @@ export const EXPERIENCE_DATA = [
       {
         role: 'Software Engineer Intern',
         duration: 'Mar, 2024 - May, 2024',
-        location: 'Ahmedabad',
         responsibilities: [
           'Gained hands-on experience in Java, Spring Boot, MySQL, and backend architecture.',
           'Joined the “Crawling-Team” and started developing web crawlers using HtmlUnit.',
