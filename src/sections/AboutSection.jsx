@@ -40,14 +40,6 @@ export default function AboutSection() {
   return (
     <>
       <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>About Me</Typography>
-      <Box sx={{ mt: 2 }}>
-        <Typography variant="overline" color="text.primary" sx={{ display: 'block', mb: 0.5, fontSize: '1.2rem', fontWeight: 600 }}>I am...</Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
-          {ABOUT_ME_DATA.tags.map((t, i) => (
-            <ColorChip key={i} label={t} color="#B798FF" size="medium" variant="outlined" />
-          ))}
-        </Box>
-      </Box>
 
       <Stack sx={{ mt: 2 }} direction={{ sm: 'column', md: 'row' }} spacing={3} alignItems={{ xs: 'flex-start', md: 'stretch' }}>
         {/* Left: Image */}
@@ -56,7 +48,16 @@ export default function AboutSection() {
         </Box>
         {/* Right: Intro then Personal Info below */}
         <Box sx={{ flexBasis: { xs: '100%', md: 'auto' }, flexGrow: 1, minWidth: 0, mt: 2 }}>
-          <Box sx={{ mt: { xs: 2, md: 4 } }}>
+          <Box>
+            <Typography variant="overline" color="text.primary" sx={{ display: 'block', mb: 0.5, fontSize: '1.2rem', fontWeight: 600 }}>I am...</Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
+              {ABOUT_ME_DATA.tags.map((t, i) => (
+                <ColorChip key={i} label={t} color="#B798FF" size="medium" variant="outlined" />
+              ))}
+            </Box>
+          </Box>
+
+          <Box sx={{ mt: 2 }}>
             {ABOUT_ME_DATA.introduction.map((p, i) => (
               <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 0.5 }}>
                 <KeyboardArrowRightRoundedIcon fontSize="small" sx={{ color: 'primary.light' }} />

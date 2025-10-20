@@ -1,9 +1,9 @@
 import { Chip } from '@mui/material';
 
-const ColorChip = ({ 
-  label, 
-  color = 'text.primary', 
-  icon = null, 
+const ColorChip = ({
+  label,
+  color = 'text.primary',
+  icon = null,
   href = null,
   onClick = null,
   variant = 'outlined',
@@ -36,13 +36,15 @@ const ColorChip = ({
         backgroundColor: `${color}10`,
         transition: 'all 0.2s ease',
         cursor: (href || clickable) ? 'pointer' : 'default',
-        '&:hover': {
-          backgroundColor: `${color}20`,
-          boxShadow: `0 0 0 2px ${color}33`,
-          transform: 'translateY(-2px)',
-        },
         '& .MuiChip-icon': {
           color: color,
+        },
+        ...(href || clickable) && {
+          '&:hover': {
+            backgroundColor: `${color}20`,
+            boxShadow: `0 0 0 2px ${color}33`,
+            transform: 'translateY(-2px)',
+          },
         },
       }}
       {...rest}
