@@ -11,19 +11,20 @@ import {
   SUN,
   STARS as STARS_CONST,
   PLANET_MATERIAL,
-  PLANETS_DEF,
+  PLANET_DATA,
   ORBIT_LAYOUT,
   AXIAL_TILT_DEG,
   AXIAL_RATES,
   SATURN_RING,
-  MOON,
   ASTEROID_BELT,
   COMETS as COMETS_CONST,
   LIGHTS,
   CAMERA,
   ORBIT_CONTROLS,
   BLOOM as BLOOM_CONST,
-  speedFromAU,
+  orbitalSpeedsFromData,
+  rotationAngularSpeedsFromData,
+  moonAngularSpeed,
 } from '../data/solarSystem';
 
 // Shared defaults are imported from data/solarSystem
@@ -269,23 +270,27 @@ function SolarSystem({ useTextures = false, showEquators = false, tex = null, ex
   // Compute realistic orbit distances using compressed sqrt(AU) scaling + collision-safe clearances.
   // This ensures no visual overlap even when a planet (esp. Saturn with rings) is closest to the Sun.
   const planets = useMemo(() => {
-    if (!PLANETS_DEF?.length) return [];
-    const defs = PLANETS_DEF;
+    if (!PLANET_DATA?.length) return [];
+    const defs = PLANET_DATA;
     const base = ORBIT_LAYOUT.base;
     const scale = ORBIT_LAYOUT.scale;
     const buffer = ORBIT_LAYOUT.buffer;
 
-    // Initial radii from sqrt(AU)
-    const initial = defs.map(d => base + scale * Math.sqrt(d.AU));
+    // Compute unscaled base radii from sqrt(AU), then apply a uniform scale to the whole layout
+    const initialUnscaled = defs.map(d => base + Math.sqrt(d.AU));
 
-    // Clearance per planet: own radius; Saturn uses outer ring radius for safety
-    const clearance = defs.map(d => d.name === 'Saturn' ? d.r * ORBIT_LAYOUT.outerRingScale : d.r);
+    // Clearance per planet: own radius; Saturn uses outer ring radius for safety (apply layout scale later)
+    const clearanceUnscaled = defs.map(d => d.name === 'Saturn' ? d.r * ORBIT_LAYOUT.outerRingScale : d.r);
 
-    // Enforce non-overlap
-    const radii = [...initial];
+    // Apply uniform layout scale to radii and clearances
+    let radii = initialUnscaled.map(r => r * scale);
+    const clearance = clearanceUnscaled.map(c => c * scale);
+    const bufferScaled = buffer * scale;
+
+    // Expand radii outward to ensure min buffer between neighboring orbits accounting for scaled clearances
     let prevOuter = radii[0] + clearance[0];
     for (let i = 1; i < radii.length; i++) {
-      const desiredInner = prevOuter + buffer;
+      const desiredInner = prevOuter + bufferScaled;
       const currentInner = radii[i] - clearance[i];
       if (currentInner < desiredInner) {
         radii[i] = desiredInner + clearance[i];
@@ -293,8 +298,10 @@ function SolarSystem({ useTextures = false, showEquators = false, tex = null, ex
       prevOuter = radii[i] + clearance[i];
     }
 
-    // Speeds normalized to Earth
-    const speeds = speedFromAU(defs.map(d => d.AU));
+    // Orbital angular speeds normalized to Earth (scaled by DAYS_SCALE & SPEED_SCALE in data)
+    const speeds = orbitalSpeedsFromData();
+    // Per-planet self-rotation angular speeds (rad/sec), aligned to PLANETS_DATA order
+    const rotSpeeds = rotationAngularSpeedsFromData();
 
     return defs.map((d, i) => ({
       name: d.name,
@@ -304,6 +311,7 @@ function SolarSystem({ useTextures = false, showEquators = false, tex = null, ex
       speed: speeds[i],
       phase: i * 0.2,
       ring: !!d.ring,
+      rotationAngularSpeed: rotSpeeds[i],
     }));
   }, []);
 
@@ -363,16 +371,19 @@ function SolarSystem({ useTextures = false, showEquators = false, tex = null, ex
       const z = center[2] + Math.sin(ang) * p.orbitR;
       grp.position.set(x, center[1], z);
     });
-    // planet self-rotation
+    // planet self-rotation (data-driven, scaled)
     planetMeshRefs.current.forEach((mesh, i) => {
       if (!mesh) return;
-      const name = planets[i]?.name;
-      const rate = axialRates[name] ?? 0.5;
-      mesh.rotation.y += rate * dt;
+      const spinAngularSpeed = planets[i]?.rotationAngularSpeed ?? 0;
+      mesh.rotation.y += spinAngularSpeed * dt;
     });
-    // Earth's Moon orbit rotation
+    // Earth's Moon orbit rotation (data-driven ratio, scaled)
     if (moonOrbitRef.current) {
-      moonOrbitRef.current.rotation.y = t * 3.0;
+      const earth = planets.find(p => p.name === 'Earth');
+      if (earth) {
+        const mSpeed = moonAngularSpeed(earth.speed);
+        moonOrbitRef.current.rotation.y = t * mSpeed;
+      }
     }
   });
 
@@ -410,12 +421,12 @@ function SolarSystem({ useTextures = false, showEquators = false, tex = null, ex
           <Line
             points={makeCircle(p.orbitR).map(([x,y,z]) => [x + center[0], y + center[1], z + center[2]])}
             color="#8e9ad6"
-            lineWidth={1}
+            lineWidth={0.2}
             transparent
-            opacity={0.45}
+            opacity={0.3}
             dashed
-            dashSize={0.2}
-            gapSize={0.15}
+            dashSize={0.1}
+            gapSize={0.1}
           />
           <group ref={(el) => (planetRefs.current[i] = el)}>
             {/* Tilt group to apply realistic axial tilt; child mesh spins around tilted axis */}

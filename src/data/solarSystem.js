@@ -48,6 +48,56 @@ export const STARS = {
   speed: 0.8,
 };
 
+// Global day and speed scales for downscaled yet realistic-looking motion
+export const DAYS_SCALE = 0.10;   // e.g., 0.10 => Earth orbital ~36.5 days, day length ~10 days
+export const SPEED_SCALE = 0.5;  // e.g., 0.10 => slow down both orbital and rotation speeds by 10x
+
+// Unified per-planet dataset (base values); AU used for layout only
+export const PLANET_DATA = [
+  { name: 'Mercury', color: '#9e9e9e', r: 0.06, AU: 0.39, orbitalDaysBase: 87.969,  dayLengthBase:  58.646 },
+  { name: 'Venus',   color: '#caa472', r: 0.10, AU: 0.72, orbitalDaysBase: 224.701, dayLengthBase: 243.025 }, // retrograde
+  { name: 'Earth',   color: '#5AB1FF', r: 0.11, AU: 1.00, orbitalDaysBase: 365.256, dayLengthBase:   1.0    },
+  { name: 'Mars',    color: '#ff6b57', r: 0.09, AU: 1.52, orbitalDaysBase: 686.980, dayLengthBase:   1.025957 },
+  { name: 'Jupiter', color: '#d2b48c', r: 0.24, AU: 5.20, orbitalDaysBase: 4332.59, dayLengthBase:   0.41354 },
+  { name: 'Saturn',  color: '#e6d7a3', r: 0.20, AU: 9.58, orbitalDaysBase: 10759.22,dayLengthBase:   0.44401 },
+  { name: 'Uranus',  color: '#79e0e8', r: 0.16, AU: 19.20, orbitalDaysBase: 30685.4, dayLengthBase:  -0.71833 }, // retrograde
+  { name: 'Neptune', color: '#6f8bff', r: 0.16, AU: 30.05, orbitalDaysBase: 60190.0, dayLengthBase:   0.67125 },
+];
+
+// Helpers: normalized to Earth and scaled by SPEED_SCALE. Arrays align to PLANET_DATA order.
+export function orbitalSpeedsFromData() {
+  const earth = PLANET_DATA.find(p => p.name === 'Earth');
+  const earthInv = 1 / (earth?.orbitalDaysBase * DAYS_SCALE || 365.256);
+  return PLANET_DATA.map(d => {
+    const p = PLANET_DATA.find(x => x.name === d.name);
+    const inv = 1 / ((p?.orbitalDaysBase || 365.256) * DAYS_SCALE);
+    return Number(((inv / earthInv) * SPEED_SCALE).toFixed(6));
+  });
+}
+
+export function rotationAngularSpeedsFromData() {
+  const orb = orbitalSpeedsFromData();
+  return PLANET_DATA.map((d, i) => {
+    const p = PLANET_DATA.find(x => x.name === d.name);
+    const scaledOrbDays = (p?.orbitalDaysBase || 365.256) * DAYS_SCALE;
+    const scaledDayLen  = (p?.dayLengthBase || 1) / DAYS_SCALE;
+    const sign = scaledDayLen < 0 ? -1 : 1;
+    const rotPerOrbit = sign * (scaledOrbDays / Math.max(Math.abs(scaledDayLen), 1e-6));
+    const spin = orb[i] * rotPerOrbit * Math.PI * 2; // rad/sec unit
+    return Number(spin.toFixed(6));
+  });
+}
+
+// Moon support (affected by DAYS_SCALE)
+export const MOON_ORBIT_DAYS_BASE = 27.321; // sidereal month
+export function moonAngularSpeed(earthOrbitalSpeed) {
+  const earth = PLANET_DATA.find(p => p.name === 'Earth');
+  const earthScaled = (earth?.orbitalDaysBase || 365.256) * DAYS_SCALE;
+  const moonScaled = MOON_ORBIT_DAYS_BASE * DAYS_SCALE;
+  const ratio = earthScaled / moonScaled;
+  return earthOrbitalSpeed * ratio;
+}
+
 // Planet visual/material parameters
 export const PLANET_MATERIAL = {
   Mercury: { roughness: 0.9,  metalness: 0.05 },
@@ -60,23 +110,11 @@ export const PLANET_MATERIAL = {
   Neptune: { roughness: 0.45, metalness: 0.1  },
 };
 
-// Planet base data (approx visual scale)
-export const PLANETS_DEF = [
-  { name: 'Mercury', color: '#9e9e9e', r: 0.06, AU: 0.39 },
-  { name: 'Venus',   color: '#caa472', r: 0.10, AU: 0.72 },
-  { name: 'Earth',   color: '#5AB1FF', r: 0.11, AU: 1.00 },
-  { name: 'Mars',    color: '#ff6b57', r: 0.09, AU: 1.52 },
-  { name: 'Jupiter', color: '#d2b48c', r: 0.24, AU: 5.20 },
-  { name: 'Saturn',  color: '#e6d7a3', r: 0.20, AU: 9.58, ring: true },
-  { name: 'Uranus',  color: '#79e0e8', r: 0.16, AU: 19.20 },
-  { name: 'Neptune', color: '#6f8bff', r: 0.16, AU: 30.05 },
-];
-
 // Orbit layout and spacing parameters
 export const ORBIT_LAYOUT = {
-  base: 0.35,           // base offset from Sun
-  scale: 1.25,          // sqrt(AU) visual scaling
-  buffer: 0.12,         // min gap between neighboring orbits
+  base: 0.01,           // base offset from Sun
+  scale: 2,          // sqrt(AU) visual scaling
+  buffer: 0.15,         // min gap between neighboring orbits
   outerRingScale: 2.6,  // used for Saturn ring clearance
   orbitLineSteps: 64,
 };
@@ -182,7 +220,7 @@ export const ORBIT_CONTROLS = {
   rotateSpeed: 0.8,
   zoomSpeed: 0.9,
   minDistance: 2.5,
-  maxDistance: 14,
+  maxDistance: 24,
   minPolarAngle: 0.05,
   maxPolarAngle: Math.PI - 0.25,
 };
