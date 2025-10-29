@@ -47,18 +47,18 @@ function Comets({ small = true, center = DEFAULT_TARGET, count = COMETS_CONST.co
         : COMETS_CONST.sizeLarge[0] + Math.random() * (COMETS_CONST.sizeLarge[1] - COMETS_CONST.sizeLarge[0]);
       // Precompute rotation matrix from perifocal to inertial (Rz(raan) Rx(inc) Rz(argp))
       const cosO = Math.cos(raan), sinO = Math.sin(raan);
-      const cosi = Math.cos(inc),  sini = Math.sin(inc);
+      const cosi = Math.cos(inc), sini = Math.sin(inc);
       const cosw = Math.cos(argp), sinw = Math.sin(argp);
-      const R11 =  cosO*cosw - sinO*sinw*cosi;
-      const R12 = -cosO*sinw - sinO*cosw*cosi;
-      const R13 =  sinO*sini;
-      const R21 =  sinO*cosw + cosO*sinw*cosi;
-      const R22 = -sinO*sinw + cosO*cosw*cosi;
-      const R23 = -cosO*sini;
-      const R31 =  sinw*sini;
-      const R32 =  cosw*sini;
-      const R33 =  cosi;
-      arr.push({ a, e, inc, raan, argp, M0, n, size, R:[R11,R12,R13,R21,R22,R23,R31,R32,R33] });
+      const R11 = cosO * cosw - sinO * sinw * cosi;
+      const R12 = -cosO * sinw - sinO * cosw * cosi;
+      const R13 = sinO * sini;
+      const R21 = sinO * cosw + cosO * sinw * cosi;
+      const R22 = -sinO * sinw + cosO * cosw * cosi;
+      const R23 = -cosO * sini;
+      const R31 = sinw * sini;
+      const R32 = cosw * sini;
+      const R33 = cosi;
+      arr.push({ a, e, inc, raan, argp, M0, n, size, R: [R11, R12, R13, R21, R22, R23, R31, R32, R33] });
     }
     return arr;
   }, [count, small]);
@@ -80,20 +80,20 @@ function Comets({ small = true, center = DEFAULT_TARGET, count = COMETS_CONST.co
       // True anomaly and radius
       const cosE = Math.cos(E), sinE = Math.sin(E);
       const r = c.a * (1 - c.e * cosE);
-      const nu = Math.atan2(Math.sqrt(1 - c.e*c.e) * sinE, cosE - c.e);
+      const nu = Math.atan2(Math.sqrt(1 - c.e * c.e) * sinE, cosE - c.e);
       // Position in perifocal frame
       const xp = r * Math.cos(nu);
       const yp = r * Math.sin(nu);
       // Rotate to inertial
       const R = c.R;
-      const x = R[0]*xp + R[1]*yp + center[0];
-      const y = R[3]*xp + R[4]*yp + center[1];
-      const z = R[6]*xp + R[7]*yp + center[2];
+      const x = R[0] * xp + R[1] * yp + center[0];
+      const y = R[3] * xp + R[4] * yp + center[1];
+      const z = R[6] * xp + R[7] * yp + center[2];
       m.position.set(x, y, z);
       // Tail should point away from the Sun (radial from Sun to comet)
       const vx = x - center[0], vy = y - center[1], vz = z - center[2];
       const len = Math.hypot(vx, vy, vz) || 1;
-      const nx = vx/len, ny = vy/len, nz = vz/len;
+      const nx = vx / len, ny = vy / len, nz = vz / len;
       // Set nucleus rotation slowly
       m.children[0].rotation.y += 0.6 * delta;
       // Point cone tail
@@ -137,7 +137,7 @@ function SolarSystemTexturedLoader({ showEquators = false, onReady }) {
   // Signal ready on next frame after textures are available and component mounted
   useEffect(() => {
     const id = requestAnimationFrame(() => {
-      try { onReady && onReady(); } catch {}
+      try { onReady && onReady(); } catch { }
     });
     return () => cancelAnimationFrame(id);
   }, [onReady]);
@@ -162,7 +162,7 @@ function AsteroidBelt({ center, inner = ASTEROID_BELT.defaultInner, outer = ASTE
         const y = Math.random() * 128;
         const r = Math.random() * 1.8 + 0.3;
         const light = 25 + Math.random() * 40; // 25–65%
-        ctx.fillStyle = `hsla(${hueBase + (Math.random()*10-5)}, 12%, ${light}%, ${0.7 + Math.random()*0.3})`;
+        ctx.fillStyle = `hsla(${hueBase + (Math.random() * 10 - 5)}, 12%, ${light}%, ${0.7 + Math.random() * 0.3})`;
         ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
       }
       const tex = new THREE.CanvasTexture(canv);
@@ -264,7 +264,7 @@ function SolarSystem({ useTextures = false, showEquators = false, tex = null, ex
         tex.saturnRing.flipY = false;
         tex.saturnRing.needsUpdate = true;
       }
-    } catch {}
+    } catch { }
   }, [useTextures, gl, tex, extra]);
 
   // Compute realistic orbit distances using compressed sqrt(AU) scaling + collision-safe clearances.
@@ -419,13 +419,13 @@ function SolarSystem({ useTextures = false, showEquators = false, tex = null, ex
       {planets?.map((p, i) => (
         <group key={p.name}>
           <Line
-            points={makeCircle(p.orbitR).map(([x,y,z]) => [x + center[0], y + center[1], z + center[2]])}
+            points={makeCircle(p.orbitR).map(([x, y, z]) => [x + center[0], y + center[1], z + center[2]])}
             color="#8e9ad6"
             lineWidth={0.2}
             transparent
-            opacity={0.3}
+            opacity={0.4}
             dashed
-            dashSize={0.1}
+            dashSize={0.2}
             gapSize={0.1}
           />
           <group ref={(el) => (planetRefs.current[i] = el)}>
@@ -435,24 +435,24 @@ function SolarSystem({ useTextures = false, showEquators = false, tex = null, ex
                 <sphereGeometry args={[p.r, 24, 24]} />
                 {useTextures ? (
                   <meshStandardMaterial
-                  {...(matParams[p.name] || { roughness: 0.7, metalness: 0.05 })}
-                  map={
-                    p.name === 'Mercury' ? tex.mercury :
-                    p.name === 'Venus' ? tex.venus :
-                    p.name === 'Earth' ? tex.earth :
-                    p.name === 'Mars' ? tex.mars :
-                    p.name === 'Jupiter' ? tex.jupiter :
-                    p.name === 'Saturn' ? tex.saturn :
-                    p.name === 'Uranus' ? tex.uranus :
-                    p.name === 'Neptune' ? tex.neptune : null
-                  }
-                />
-              ) : (
-                <meshStandardMaterial
-                  color={p.color}
-                  {...(matParams[p.name] || { roughness: 0.7, metalness: 0.05 })}
-                />
-              )}
+                    {...(matParams[p.name] || { roughness: 0.7, metalness: 0.05 })}
+                    map={
+                      p.name === 'Mercury' ? tex.mercury :
+                        p.name === 'Venus' ? tex.venus :
+                          p.name === 'Earth' ? tex.earth :
+                            p.name === 'Mars' ? tex.mars :
+                              p.name === 'Jupiter' ? tex.jupiter :
+                                p.name === 'Saturn' ? tex.saturn :
+                                  p.name === 'Uranus' ? tex.uranus :
+                                    p.name === 'Neptune' ? tex.neptune : null
+                    }
+                  />
+                ) : (
+                  <meshStandardMaterial
+                    color={p.color}
+                    {...(matParams[p.name] || { roughness: 0.7, metalness: 0.05 })}
+                  />
+                )}
               </mesh>
               {showEquators && (
                 <mesh rotation={[-Math.PI / 2, 0, 0]}>
@@ -596,7 +596,7 @@ function ApplySavedCameraInteractive({ controlsRef }) {
           // Try again next frame until controls ready to sync target exactly
           raf = requestAnimationFrame(apply);
         }
-      } catch {}
+      } catch { }
     };
     apply();
     return () => { if (raf) cancelAnimationFrame(raf); };
@@ -619,7 +619,7 @@ function CameraStateSync({ controlsRef }) {
       window.dispatchEvent(new CustomEvent('solar_cam_updated'));
       lastPos.current = data.pos;
       lastTarget.current = data.target;
-    } catch {}
+    } catch { }
     return () => {
       // Final save on unmount
       try {
@@ -628,7 +628,7 @@ function CameraStateSync({ controlsRef }) {
         const data = { pos: [pos.x, pos.y, pos.z], target: tgt ? [tgt.x, tgt.y, tgt.z] : [2.8, 0, -4] };
         localStorage.setItem('solar_cam_state', JSON.stringify(data));
         window.dispatchEvent(new CustomEvent('solar_cam_updated'));
-      } catch {}
+      } catch { }
     };
   }, [camera, controlsRef]);
   // Per-frame check with throttle so we don't depend on ref-ready event binding
@@ -649,7 +649,7 @@ function CameraStateSync({ controlsRef }) {
       window.dispatchEvent(new CustomEvent('solar_cam_updated'));
       lastPos.current = pos;
       lastTarget.current = target;
-    } catch {}
+    } catch { }
   });
   return null;
 }
@@ -695,9 +695,9 @@ function ApplySavedCamera() {
             }
             camera.updateProjectionMatrix();
             if (invalidate) invalidate();
-          } catch {}
+          } catch { }
         }, 0);
-      } catch {}
+      } catch { }
     };
     // Apply on mount and on any updates dispatched from interactive view
     apply();
@@ -723,7 +723,7 @@ export default function Background3D({ mode = 'background' }) {
   // Preload all texture assets; render flat first, then switch to textures when all are loaded
   useEffect(() => {
     let canceled = false;
-    
+
     // Get all texture URLs to preload
     const required = [
       ...Object.values(PLANET_TEXTURES),
@@ -732,7 +732,7 @@ export default function Background3D({ mode = 'background' }) {
 
     const loadImage = (src) => new Promise((resolve, reject) => {
       if (!src) return resolve(true); // Skip empty sources
-      
+
       const im = new Image();
       im.onload = () => resolve(true);
       im.onerror = (e) => {
@@ -798,7 +798,7 @@ export default function Background3D({ mode = 'background' }) {
             <SolarSystemTexturedLoader key="tex" showEquators={false} />
           </Suspense>
         )}
-          {mode === 'interactive' && <ApplySavedCameraInteractive controlsRef={controlsRef} />}
+        {mode === 'interactive' && <ApplySavedCameraInteractive controlsRef={controlsRef} />}
         {mode === 'interactive' && (
           <OrbitControls ref={controlsRef} makeDefault target={ORBIT_CONTROLS.target} enablePan={ORBIT_CONTROLS.enablePan} enableDamping dampingFactor={ORBIT_CONTROLS.dampingFactor} rotateSpeed={ORBIT_CONTROLS.rotateSpeed} zoomSpeed={ORBIT_CONTROLS.zoomSpeed} minDistance={ORBIT_CONTROLS.minDistance} maxDistance={ORBIT_CONTROLS.maxDistance} minPolarAngle={ORBIT_CONTROLS.minPolarAngle} maxPolarAngle={ORBIT_CONTROLS.maxPolarAngle} />
         )}

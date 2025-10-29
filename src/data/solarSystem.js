@@ -2,7 +2,7 @@
 // Import these into components to avoid hardcoded magic numbers.
 
 // Camera defaults
-export const DEFAULT_CAM = [8.592502439957185, 2.247226468071675, -7.90004483334747];
+export const DEFAULT_CAM = [12, 6, -10];
 export const DEFAULT_TARGET = [2.8, 0, -4];
 
 // Texture paths (relative to public/)
@@ -41,11 +41,18 @@ export const SUN = {
 export const STARS = {
   radius: 60,
   depth: 120,
-  count: 500,
-  factor: 3,
+  count: 30,
+  factor: 1,
   saturation: 0,
   fade: true,
   speed: 0.8,
+};
+
+// Background parallax (applies in background mode only)
+export const PARALLAX = {
+  enabled: true,
+  zoomStrength: 0.25,     // how much to dolly along cam->target per full-page scroll
+  targetYOffset: 0.3,     // raise target slightly with scroll
 };
 
 // Global day and speed scales for downscaled yet realistic-looking motion
