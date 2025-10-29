@@ -49,7 +49,7 @@ export default function AboutSection() {
         {/* Right: Intro then Personal Info below */}
         <Box sx={{ flexBasis: { xs: '100%', md: 'auto' }, flexGrow: 1, minWidth: 0, mt: 2 }}>
           <Box>
-            <Typography variant="overline" color="text.primary" sx={{ display: 'block', mb: 0.5, fontSize: '1.2rem', fontWeight: 600 }}>I am...</Typography>
+            <Typography variant="overline" color="primary.light" sx={{ display: 'block', mb: 0.5, fontSize: '1.2rem', fontWeight: 600 }}>{ABOUT_ME_DATA.title}</Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
               {ABOUT_ME_DATA.tags.map((t, i) => (
                 <ColorChip key={i} label={t} color="#B798FF" size="medium" variant="outlined" />
@@ -69,7 +69,7 @@ export default function AboutSection() {
             {ABOUT_ME_DATA.personalInfo.map((row) => (
               <Box key={row.label} sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 0.5 }}>
                 <KeyboardArrowRightRoundedIcon fontSize="small" sx={{ color: 'primary.light' }} />
-                <Typography variant="body2" sx={{ fontWeight: 700, mr: 1 }}>{row.label}:</Typography>
+                <Typography variant="body2" color="primary.light" sx={{ fontWeight: 700, mr: 1 }}>{row.label}:</Typography>
                 <Typography variant="body2" sx={{ opacity: 0.9 }}>{row.value}</Typography>
               </Box>
             ))}

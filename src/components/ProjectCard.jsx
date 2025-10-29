@@ -38,7 +38,7 @@ export default function ProjectCard({ projectKey, project, onOpen }) {
         </Box>
         <CardContent sx={{ bgcolor: 'rgba(16,14,24,0.45)', backdropFilter: 'blur(6px)', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <Typography variant="overline" color="text.secondary">{project.category}</Typography>
-          <Typography variant="h6" sx={{ fontWeight: 700 }}>{project.title}</Typography>
+          <Typography variant="h6" color="primary.light" sx={{ fontWeight: 700 }}>{project.title}</Typography>
           <Typography variant="body2" sx={{ mt: 1 }}>{project.shortDescription}</Typography>
         </CardContent>
       </CardActionArea>
