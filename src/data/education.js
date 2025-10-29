@@ -1,7 +1,7 @@
 export const EDUCATION_DATA = [
   {
     school: 'LD College of Engineering',
-    degree: 'Bachelor of Engineering · Information Technology',
+    degree: 'Bachelor of Engineering - Information Technology',
     duration: '2020 - 2024',
     location: 'Ahmedabad',
     achievements: [
@@ -11,7 +11,7 @@ export const EDUCATION_DATA = [
   },
   {
     school: 'Ved International School',
-    degree: 'High School · Science',
+    degree: 'High School - Science',
     duration: '2018 - 2020',
     location: 'Gandhinagar',
     achievements: [
