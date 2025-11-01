@@ -481,7 +481,7 @@ function SolarSystem({ useTextures = false, showEquators = false, tex = null, ex
                     return (
                       <>
                         <ringGeometry args={[inner, outer, 256]} />
-                        {useTextures ? (
+                        {useTextures && tex?.saturnRing ? (
                           <shaderMaterial
                             key={`${p.name}-ring-shader`}
                             transparent

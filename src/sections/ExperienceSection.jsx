@@ -7,14 +7,14 @@ const ExperienceBox = ({ exp }) => {
     <>
       <Box sx={{
         display: 'flex',
-        flexDirection: { xs: 'column', md: 'row' },
-        alignItems: { xs: 'flex-start', md: 'center' },
+        flexDirection: { xs: 'column', sm: 'row' },
+        alignItems: { xs: 'flex-start', sm: 'center' },
         gap: 0.5,
       }}>
         <Typography variant="h6" color="primary.light" sx={{ fontWeight: 800 }}>
           {exp.company}
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ textAlign: { xs: 'left', md: 'right' }, ml: { md: 'auto' } }}>
+        <Typography variant="body2" color="text.secondary" sx={{ textAlign: { xs: 'left', sm: 'right' }, ml: { sm: 'auto' } }}>
           {exp.location}
         </Typography>
       </Box>
@@ -25,14 +25,14 @@ const ExperienceBox = ({ exp }) => {
         <div key={index}>
           <Box sx={{
             display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            alignItems: { xs: 'flex-start', md: 'baseline' },
+            flexDirection: { xs: 'column', sm: 'row' },
+            alignItems: { xs: 'flex-start', sm: 'baseline' },
             gap: 0.5,
           }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600, fontStyle: 'italic' }}>
               {role?.role}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ textAlign: { xs: 'left', md: 'right' }, ml: { md: 'auto' }, mb: { xs: 0.5, md: 0 } }}>
+            <Typography variant="body2" color="text.secondary" sx={{ textAlign: { xs: 'left', sm: 'right' }, ml: { sm: 'auto' }, mb: { xs: 0.5, sm: 0 } }}>
               {role?.duration}
             </Typography>
           </Box>
