@@ -61,14 +61,14 @@ export const SPEED_SCALE = 0.5;  // e.g., 0.10 => slow down both orbital and rot
 
 // Unified per-planet dataset (base values); AU used for layout only
 export const PLANET_DATA = [
-  { name: 'Mercury', color: '#9e9e9e', r: 0.06, AU: 0.39, orbitalDaysBase: 87.969,  dayLengthBase:  58.646 },
-  { name: 'Venus',   color: '#caa472', r: 0.10, AU: 0.72, orbitalDaysBase: 224.701, dayLengthBase: 243.025 }, // retrograde
-  { name: 'Earth',   color: '#5AB1FF', r: 0.11, AU: 1.00, orbitalDaysBase: 365.256, dayLengthBase:   1.0    },
-  { name: 'Mars',    color: '#ff6b57', r: 0.09, AU: 1.52, orbitalDaysBase: 686.980, dayLengthBase:   1.025957 },
-  { name: 'Jupiter', color: '#d2b48c', r: 0.24, AU: 5.20, orbitalDaysBase: 4332.59, dayLengthBase:   0.41354 },
-  { name: 'Saturn',  color: '#e6d7a3', r: 0.20, AU: 9.58, orbitalDaysBase: 10759.22,dayLengthBase:   0.44401 },
-  { name: 'Uranus',  color: '#79e0e8', r: 0.16, AU: 19.20, orbitalDaysBase: 30685.4, dayLengthBase:  -0.71833 }, // retrograde
-  { name: 'Neptune', color: '#6f8bff', r: 0.16, AU: 30.05, orbitalDaysBase: 60190.0, dayLengthBase:   0.67125 },
+  { name: 'Mercury', color: '#9e9e9e', r: 0.06, AU: 0.39,  orbitalDaysBase: 87.969,   dayLengthBase:  58.646  },
+  { name: 'Venus',   color: '#caa472', r: 0.10, AU: 0.72,  orbitalDaysBase: 224.701,  dayLengthBase: -243.025 }, // retrograde
+  { name: 'Earth',   color: '#5AB1FF', r: 0.11, AU: 1.00,  orbitalDaysBase: 365.256,  dayLengthBase:  1.0     },
+  { name: 'Mars',    color: '#ff6b57', r: 0.09, AU: 1.52,  orbitalDaysBase: 686.980,  dayLengthBase:  1.025957},
+  { name: 'Jupiter', color: '#d2b48c', r: 0.24, AU: 5.20,  orbitalDaysBase: 4332.59,  dayLengthBase:  0.41354 },
+  { name: 'Saturn',  color: '#e6d7a3', r: 0.20, AU: 9.58,  orbitalDaysBase: 10759.22, dayLengthBase:  0.44401, ring: true },
+  { name: 'Uranus',  color: '#79e0e8', r: 0.16, AU: 19.20, orbitalDaysBase: 30685.4,  dayLengthBase: -0.71833 }, // retrograde
+  { name: 'Neptune', color: '#6f8bff', r: 0.16, AU: 30.05, orbitalDaysBase: 60190.0,  dayLengthBase:  0.67125 },
 ];
 
 // Helpers: normalized to Earth and scaled by SPEED_SCALE. Arrays align to PLANET_DATA order.
