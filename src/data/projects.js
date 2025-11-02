@@ -1,4 +1,15 @@
 export const PROJECTS_DATA = {
+  'my-site': {
+    title: 'My Site v2.0',
+    category: 'Portfolio Site, React, Three.js',
+    date: 'Nov 2025',
+    url: 'https://raj4823.github.io/MySite/',
+    shortDescription: 'React Based Portfolio Site',
+    description:
+      'Version 2.0 of my portfolio — a modern one‑page site built with React and Three.js. It features an immersive solar system background. The focus is on performance, smooth scrolling, responsive layout, and a clean dark theme.',
+    filter: ['react', 'superverse'],
+    display: true,
+  },
   'login-system': {
     title: 'Login System',
     category: 'MERN Stack',
@@ -54,22 +65,11 @@ export const PROJECTS_DATA = {
     filter: ['bootstrap', 'superverse'],
     display: true,
   },
-  'my-site': {
-    title: 'My Site v2.0',
-    category: 'Portfolio Site, React, Three.js',
-    date: 'Oct 2025',
-    url: 'https://github.com/RAJ4823/MySite2.0',
-    shortDescription: 'React Based Portfolio Site',
-    description:
-      'Version 2.0 of my portfolio — a modern one‑page site built with React and Three.js. It features an immersive solar system background. The focus is on performance, smooth scrolling, responsive layout, and a clean dark theme.',
-    filter: ['react', 'superverse'],
-    display: true,
-  },
   'my-site-old': {
     title: 'My Site v1.0',
     category: 'Portfolio Site, Bootstrap, Design',
     date: 'Oct 2022 – Oct 2025',
-    url: 'https://github.com/RAJ4823/MySite',
+    url: 'https://raj4823.github.io/MySite1.0/',
     shortDescription: 'Bootstrap Based Portfolio Site',
     description:
       'Version 1.0 of my portfolio, built purely with Bootstrap, HTML and CSS. It delivered a solid, fast, fully responsive single‑page experience and remained publicly live for about two years before being replaced by v2.0 in Oct 2025.',
@@ -85,7 +85,7 @@ export const PROJECTS_DATA = {
     description:
       'NMHP means National Medical & Health Portal. It is a SIH 2022 project. Our main aim was to reduce exploitations happening in the hospitals with the help of website. This UI describes the working of our website.',
     filter: ['ui'],
-    display: true,
+    display: false,
   },
   'student-portfolio': {
     title: 'Student Portfolio',
