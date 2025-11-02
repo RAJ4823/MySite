@@ -105,6 +105,7 @@ const ProjectModal = memo(({ open, onClose, projectKey, project }) => {
 
   if (!project) return null;
   const imgSrc = `${import.meta.env.VITE_BASE_URL || '/'}images/portfolio/${projectKey}.jpg`;
+  const isCurrentSite = projectKey === 'my-site';
 
   const handleClose = (event, reason) => {
     if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
@@ -169,6 +170,7 @@ const ProjectModal = memo(({ open, onClose, projectKey, project }) => {
               rel="noopener noreferrer" 
               variant="contained" 
               color="primary"
+              disabled={isCurrentSite}
               sx={{ mt: 2.5, fontWeight: 700, boxShadow: '0 8px 20px rgba(106,90,205,0.35)' }}
             >
               Visit Project
