@@ -7,7 +7,7 @@ export default defineConfig(({ command, mode }) => {
       port: 80,
       host: true,
     },
-    base: '/MySite2.0/',
+    base: '/MySite/',
     plugins: [react()],
   }
 })
