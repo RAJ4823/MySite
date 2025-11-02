@@ -25,6 +25,7 @@ import {
   orbitalSpeedsFromData,
   rotationAngularSpeedsFromData,
   moonAngularSpeed,
+  getSimTimeSeconds,
 } from '../data/solarSystem';
 
 // Shared defaults are imported from data/solarSystem
@@ -361,7 +362,7 @@ function SolarSystem({ useTextures = false, showEquators = false, tex = null, ex
   };
 
   useFrame((state, delta) => {
-    const t = state.clock.elapsedTime;
+    const t = getSimTimeSeconds();
     const dt = delta;
     planetRefs.current.forEach((grp, i) => {
       if (!grp) return;

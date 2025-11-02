@@ -105,6 +105,18 @@ export function moonAngularSpeed(earthOrbitalSpeed) {
   return earthOrbitalSpeed * ratio;
 }
 
+// Global simulation time that persists across component remounts within the page.
+// This prevents planets from jumping back when switching modes.
+export function getSimTimeSeconds() {
+  if (typeof window !== 'undefined') {
+    if (!window.__SOLAR_EPOCH_MS__) {
+      window.__SOLAR_EPOCH_MS__ = Date.now();
+    }
+    return (Date.now() - window.__SOLAR_EPOCH_MS__) / 1000;
+  }
+  return 0;
+}
+
 // Planet visual/material parameters
 export const PLANET_MATERIAL = {
   Mercury: { roughness: 0.9,  metalness: 0.05 },
