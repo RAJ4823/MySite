@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Box, Typography } from '@mui/material';
+import { trackEvent } from '../analytics';
 
 const SCROLL_THRESHOLD = 100; // Pixels to scroll before hiding the hint
 const FIRST_VISIT_DELAY = 10000; // 10 seconds for first visit
@@ -17,6 +18,7 @@ export default function ScrollHint() {
       aboutSection.scrollIntoView({ behavior: 'smooth' });
     }
     setIsVisible(false);
+    trackEvent('scroll_hint_click', { section: 'home' });
   }, []);
 
   useEffect(() => {

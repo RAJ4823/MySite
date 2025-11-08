@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { trackEvent } from '../analytics';
 
 // Candidate image names in public/profile (existing files)
 const candidates = ['me0.png', 'me1.png', 'me2.png', 'me3.png'];
@@ -34,7 +35,7 @@ export default function FeaturedProfile() {
       }}>
         <Avatar
           src={src}
-          onClick={next}
+          onClick={() => { trackEvent('profile_avatar_click', { action: 'next' }); next(); }}
           onError={(e) => { e.currentTarget.src = ''; }}
           sx={{
             width: { xs: 240, sm: 260, md: 280, lg: 300 },

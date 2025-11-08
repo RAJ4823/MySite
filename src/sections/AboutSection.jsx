@@ -18,6 +18,7 @@ import { SOCIAL_PROFILES_DATA } from '../data/socialProfiles';
 import { CP_PROFILES_DATA } from '../data/cpProfiles';
 import { INTERESTS_DATA } from '../data/interests';
 import ColorChip from '../components/ColorChip';
+import { trackEvent } from '../analytics';
 
 const MaterilUIIcons = {
   GitHub: GitHubIcon,
@@ -94,6 +95,7 @@ export default function AboutSection() {
                   target="_blank"
                   rel="noopener"
                   clickable
+                  onClick={() => trackEvent('social_profile_click', { name: s.name, url: s.link })}
                 />
               );
             })}
@@ -117,6 +119,7 @@ export default function AboutSection() {
                 target="_blank"
                 rel="noopener"
                 clickable
+                onClick={() => trackEvent('cp_profile_click', { name: cp.name, url: cp.link })}
               />
             ))}
           </Stack>

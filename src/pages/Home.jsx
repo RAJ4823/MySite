@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Background3D from '../components/Background3D';
 import ProjectModal from '../components/ProjectModal';
+import { trackEvent } from '../analytics';
 
 import { PROJECTS_DATA } from '../data/projects';
 
@@ -104,6 +105,7 @@ export default function Home() {
         <Navbar onOpenSolar={() => {
           playMusic();
           setSolarOpen(true);
+          trackEvent('solar_overlay_open');
         }} />
 
       <Section id="home" glass={false}>

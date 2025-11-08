@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
+import { initGA, startEngagementTracking, initClickTracking, trackPageView } from './analytics';
 
 function ScrollToHashElement() {
   const location = useLocation();
@@ -26,6 +27,18 @@ function ScrollToHashElement() {
 }
 
 export default function App() {
+  const location = useLocation();
+
+  useEffect(() => {
+    initGA();
+    startEngagementTracking();
+    initClickTracking();
+  }, []);
+
+  useEffect(() => {
+    trackPageView();
+  }, [location]);
+
   return (
     <>
       <ScrollToHashElement />

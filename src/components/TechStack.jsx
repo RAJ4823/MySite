@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import Tooltip from '@mui/material/Tooltip';
 import { useMemo, useState, useCallback } from 'react';
 import { TECH_STACK } from '../data/techStack';
+import { trackEvent } from '../analytics';
 
 function TechCard({ name, color, iconify }) {
   const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -38,6 +39,7 @@ function TechCard({ name, color, iconify }) {
         onMouseMove={handleMove}
         onTouchStart={() => setHover(true)}
         onTouchEnd={() => setHover(false)}
+        onClick={() => trackEvent('tech_stack_box_click', { name })}
         sx={{
           width: { xs: 60, md: 80 },
           height: { xs: 60, md: 80 },

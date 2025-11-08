@@ -9,6 +9,7 @@ import { useCallback, useState } from 'react';
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { trackEvent } from '../analytics';
 
 const pages = [
   { label: 'Home', id: 'home' },
@@ -24,6 +25,7 @@ export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
   const menuOpen = Boolean(anchorEl);
 
   const go = useCallback((id) => {
+    trackEvent('nav_click', { section: 'navbar', label: id });
     const el = document.getElementById(id);
     if (el) {
       // Update URL with hash
@@ -82,7 +84,7 @@ export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
                 </Button>
               ))}
               {onOpenSolar && (
-                <Button variant="outlined" color="secondary" onClick={onOpenSolar} sx={{ fontWeight: 700, ml: 1 }}>
+                <Button variant="outlined" color="secondary" onClick={() => { trackEvent('nav_click', { section: 'navbar', label: 'view_solar_system' }); onOpenSolar(); }} sx={{ fontWeight: 700, ml: 1 }}>
                   View Solar System
                 </Button>
               )}
@@ -120,7 +122,7 @@ export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
                     <Button
                       variant="outlined"
                       color="secondary"
-                      onClick={() => { setAnchorEl(null); onOpenSolar?.(); }}
+                      onClick={() => { setAnchorEl(null); trackEvent('nav_click', { section: 'navbar', label: 'view_solar_system' }); onOpenSolar?.(); }}
                       fullWidth
                       sx={{ fontWeight: 700 }}
                     >
@@ -134,7 +136,7 @@ export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
 
           {/* Overlay back button (always right) */}
           {overlay && (
-            <Button variant="outlined" color="secondary" onClick={onBack} sx={{ fontWeight: 700 }}>
+            <Button variant="outlined" color="secondary" onClick={() => { trackEvent('nav_click', { section: 'overlay', label: 'close_solar_system' }); onBack?.(); }} sx={{ fontWeight: 700 }}>
               Back to MySite
             </Button>
           )}

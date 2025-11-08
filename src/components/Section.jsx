@@ -14,6 +14,7 @@ export default function Section({
   return (
     <Box 
       id={id} 
+      data-section={id}
       sx={{ 
         py: { xs: 3, md: 5 }, 
         scrollMarginTop: '50px',

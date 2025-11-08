@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import { trackEvent } from '../analytics';
 
 // Optimized image component with lazy loading
 const LazyImage = memo(({ src, alt }) => (
@@ -90,6 +91,9 @@ const ProjectModal = memo(({ open, onClose, projectKey, project }) => {
     if (open) {
       isClosing.current = false;
       document.body.style.overflow = 'hidden';
+      if (projectKey) {
+        trackEvent('project_modal_open', { project_key: projectKey });
+      }
     } else {
       const timer = setTimeout(() => {
         if (!isClosing.current) {
@@ -110,6 +114,7 @@ const ProjectModal = memo(({ open, onClose, projectKey, project }) => {
   const handleClose = (event, reason) => {
     if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
       isClosing.current = true;
+      if (projectKey) trackEvent('project_modal_close', { project_key: projectKey, reason });
       const dialog = dialogRef.current?.querySelector('.MuiDialog-paper');
       if (dialog) {
         dialog.style.animation = 'fadeOut 0.2s forwards';
@@ -118,6 +123,7 @@ const ProjectModal = memo(({ open, onClose, projectKey, project }) => {
         onClose();
       }, 200);
     } else {
+      if (projectKey) trackEvent('project_modal_close', { project_key: projectKey, reason: 'button' });
       onClose();
     }
   };
@@ -172,6 +178,7 @@ const ProjectModal = memo(({ open, onClose, projectKey, project }) => {
               color="primary"
               disabled={isCurrentSite}
               sx={{ mt: 2.5, fontWeight: 700, boxShadow: '0 8px 20px rgba(106,90,205,0.35)' }}
+              onClick={() => trackEvent('project_visit', { project_key: projectKey, url: project.url, where: 'modal' })}
             >
               Visit Project
             </Button>

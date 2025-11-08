@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import { useEffect, useRef, useState } from 'react';
 import { CP_ACHIEVEMENTS_DATA } from '../data/cpAchievements';
+import { trackEvent } from '../analytics';
 
 function useInView(options) {
   const ref = useRef(null);
@@ -53,7 +54,7 @@ export default function CPAchievements() {
     <Grid container spacing={3} justifyContent="space-around" ref={rootRef}>
       {CP_ACHIEVEMENTS_DATA.map((a) => (
         <Grid item key={a.name} xs={12} sm={12} md={6} width={{ md: '22%', xs: '46%' }}>
-          <Link href={a.link} target="_blank" rel="noopener" underline="none" sx={{ display: 'block', height: '100%' }}>
+          <Link href={a.link} target="_blank" rel="noopener" underline="none" sx={{ display: 'block', height: '100%' }} onClick={() => trackEvent('cp_achievement_click', { name: a.name, url: a.link })}>
             <Paper
               variant="outlined"
               sx={{

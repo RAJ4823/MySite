@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { trackEvent } from '../analytics';
 
 export default function ProjectCard({ projectKey, project, onOpen }) {
   const imgSrc = `${import.meta.env.VITE_BASE_URL || '/'}images/portfolio/${projectKey}.jpg`;
@@ -32,7 +33,7 @@ export default function ProjectCard({ projectKey, project, onOpen }) {
       }}
     >
       {/* Make the click area fill remaining height so actions stay at bottom */}
-      <CardActionArea onClick={() => onOpen && onOpen(projectKey)} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', flexGrow: 1, borderRadius: 0 }}>
+      <CardActionArea onClick={() => { trackEvent('project_open', { project_key: projectKey, where: 'card' }); onOpen && onOpen(projectKey); }} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', flexGrow: 1, borderRadius: 0 }}>
         {/* Fixed-height image area so all cards look uniform */}
         <Box sx={{ height: 160, overflow: 'hidden', position: 'relative', background: 'linear-gradient(135deg,#2a2345,#14121f)' }}>
           {/* eslint-disable-next-line jsx-a11y/alt-text */}
@@ -47,9 +48,9 @@ export default function ProjectCard({ projectKey, project, onOpen }) {
         </CardContent>
       </CardActionArea>
       <CardActions sx={{ justifyContent: 'space-between', alignItems: 'center', px: 2, py: 1, minHeight: 52, bgcolor: 'rgba(255,255,255,0.02)' }}>
-        <Button disabled={isCurrentSite || !project.url} href={project.url} target="_blank" rel="noopener" variant="text">Visit</Button>
+        <Button disabled={isCurrentSite || !project.url} href={project.url} target="_blank" rel="noopener" variant="text" onClick={() => trackEvent('project_visit', { project_key: projectKey, url: project.url })}>Visit</Button>
         <Tooltip title="Quick view">
-          <IconButton onClick={() => onOpen && onOpen(projectKey)} size="small" color="primary">
+          <IconButton onClick={() => { trackEvent('project_open', { project_key: projectKey, where: 'icon' }); onOpen && onOpen(projectKey); }} size="small" color="primary">
             <VisibilityIcon fontSize="small" />
           </IconButton>
         </Tooltip>

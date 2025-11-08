@@ -3,6 +3,7 @@ import { Stars, Line, OrbitControls, useTexture } from '@react-three/drei';
 import { useRef, useMemo, useEffect, useLayoutEffect, useState, Suspense } from 'react';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import * as THREE from 'three';
+import { trackEvent } from '../analytics';
 import {
   DEFAULT_CAM,
   DEFAULT_TARGET,
@@ -718,6 +719,7 @@ export default function Background3D({ mode = 'background' }) {
     onTexFirstFrame.current = () => {
       // Small delay so the textured scene has time to render a few frames before removing flat
       setTimeout(() => setTexMounted(true), 250);
+      try { trackEvent('solar_textured_ready'); } catch {}
     };
   }
 
