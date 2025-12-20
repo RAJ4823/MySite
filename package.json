@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:github": "if exist dist-github rmdir /s /q dist-github && mkdir dist-github && copy github-pages-redirect.html dist-github\\index.html",
+    "build:github": "(if exist dist-github rmdir /s /q dist-github) & mkdir dist-github & copy github-pages-redirect.html dist-github\\index.html",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build:github",
