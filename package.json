@@ -7,11 +7,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:github": "vite build --base /MySite/",
+    "build:github": "if exist dist-github rmdir /s /q dist-github && mkdir dist-github && copy github-pages-redirect.html dist-github\\index.html",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build:github",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist-github"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

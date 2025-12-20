@@ -1,0 +1,15 @@
+# robots.txt for iamraj.dev
+# https://iamraj.dev
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://iamraj.dev/sitemap.xml
+
+# Crawl-delay (optional, for aggressive bots)
+Crawl-delay: 1
+
+# Block common bot paths (if needed in future)
+# Disallow: /api/
+# Disallow: /admin/
