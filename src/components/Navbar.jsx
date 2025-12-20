@@ -36,8 +36,8 @@ export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
         window.location.hash = `#${id}`;
       }
       // Smooth scroll to element
-      el.scrollIntoView({ 
-        behavior: 'smooth', 
+      el.scrollIntoView({
+        behavior: 'smooth',
         block: 'start',
         inline: 'nearest'
       });
@@ -79,7 +79,7 @@ export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
           {!overlay && (
             <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1 }}>
               {pages.map((p) => (
-                <Button key={p.id} color="inherit" onClick={() => go(p.id)} sx={{ fontWeight: 600 }}>
+                <Button key={p.id} color="inherit" href={`#${p.id}`} onClick={(e) => { e.preventDefault(); go(p.id); }} sx={{ fontWeight: 600 }}>
                   {p.label}
                 </Button>
               ))}

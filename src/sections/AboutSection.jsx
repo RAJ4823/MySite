@@ -40,7 +40,7 @@ const InterestIcons = {
 export default function AboutSection() {
   return (
     <>
-      <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>About Me</Typography>
+      <Typography variant="h4" component="h2" sx={{ fontWeight: 800, mb: 2 }}>About Me</Typography>
 
       <Stack sx={{ mt: 2 }} direction={{ sm: 'column', md: 'row' }} spacing={3} alignItems={{ xs: 'flex-start', md: 'stretch' }}>
         {/* Left: Image */}

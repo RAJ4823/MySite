@@ -35,6 +35,7 @@ export default function FeaturedProfile() {
       }}>
         <Avatar
           src={src}
+          alt="Raj Patel - Full Stack Developer"
           onClick={() => { trackEvent('profile_avatar_click', { action: 'next' }); next(); }}
           onError={(e) => { e.currentTarget.src = ''; }}
           sx={{

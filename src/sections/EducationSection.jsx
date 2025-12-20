@@ -49,7 +49,7 @@ const EducationBox = ({ edu }) => {
 const EducationSection = () => {
   return (
     <>
-      <Typography variant="h4" sx={{ fontWeight: 800, mb: 4 }}>Education</Typography>
+      <Typography variant="h4" component="h2" sx={{ fontWeight: 800, mb: 4 }}>Education</Typography>
       <Timeline
         items={EDUCATION_DATA}
         renderItem={(edu) => (

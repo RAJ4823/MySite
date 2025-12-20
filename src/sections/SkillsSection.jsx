@@ -8,8 +8,8 @@ import ColorChip from '../components/ColorChip';
 const SkillsSection = () => {
   return (
     <>
-      <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>Skills</Typography>
-      
+      <Typography variant="h4" component="h2" sx={{ fontWeight: 800, mb: 2 }}>Skills</Typography>
+
       <Box sx={{ mt: 2 }}>
         <Typography variant="overline" color="text.primary" sx={{ display: 'block', mb: 0.5, fontSize: '1.2rem', fontWeight: 600 }}>Soft Skills</Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
@@ -40,12 +40,12 @@ const SkillsSection = () => {
           </Grid>
         </Grid>
       </Box>
-      
+
       <Box sx={{ mt: 2 }}>
         <Typography variant="overline" color="text.primary" sx={{ display: 'block', mb: 0.5, fontSize: '1.2rem', fontWeight: 600 }}>Tech Stack</Typography>
         <TechStack />
       </Box>
-      
+
       <Box sx={{ mt: 2 }}>
         <Typography variant="overline" color="text.primary" sx={{ display: 'block', mb: 0.5, fontSize: '1.2rem', fontWeight: 600 }}>CP Achievements</Typography>
         <CPAchievements />
