@@ -13,7 +13,7 @@ export const ABOUT_ME_DATA = {
     "A competitive programmer who combines analytical thinking with creativity to design clean, maintainable, and high-performing architectures."
   ],
   personalInfo: [
-    { label: 'My Email', value: 'halpaniraj.hr4823@gmail.com' },
+    { label: 'My Email', value: 'contact@iamraj.dev' },
     { label: 'My Birthday', value: '4th August, 2003' },
     { label: 'Hometown', value: 'Mansa, Gujarat, India' },
   ],
