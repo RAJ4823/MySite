@@ -2,6 +2,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import ScrollHint from '../components/ScrollHint';
+import FeaturedProjectNotification from '../components/FeaturedProjectNotification';
 
 export default function HomeSection() {
   return (
@@ -18,6 +19,7 @@ export default function HomeSection() {
           <Typography variant="h5" component="h2" sx={{ mt: 1, color: 'primary.light' }}>A Full-Stack Software Developer</Typography>
         </Grid>
       </Grid>
+      <FeaturedProjectNotification />
       <ScrollHint />
     </Box>
   );

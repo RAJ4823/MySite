@@ -1,35 +1,23 @@
 export const PROJECTS_DATA = {
   'my-site': {
-    title: 'My Site v2.0',
+    title: 'My Site',
     category: 'Portfolio Site, React, Three.js',
     date: 'Nov 2025',
-    url: 'https://raj4823.github.io/MySite/',
+    url: 'https://iamraj.dev/',
     shortDescription: 'React Based Portfolio Site',
     description:
       'Version 2.0 of my portfolio — a modern one‑page site built with React and Three.js. It features an immersive solar system background. The focus is on performance, smooth scrolling, responsive layout, and a clean dark theme.',
     filter: ['react', 'superverse'],
-    display: true,
+    display: false,
   },
-  'login-system': {
-    title: 'Login System',
-    category: 'MERN Stack',
-    date: 'Oct 2023',
-    url: 'https://login-system-raj4823.onrender.com/',
-    shortDescription: 'MERN Stack based Complete Login System',
-    description:
-      'A MERN stack-based login system with user registration, secure authentication, profile management, password recovery with OTP, and email notifications, and more.',
-    filter: ['react', 'superverse'],
-    display: true,
-  },
-  'weather-site': {
-    title: 'Weather Site',
-    category: 'React, API',
-    date: 'Feb 2023',
-    url: 'https://raj4823.github.io/WeatherSite',
-    shortDescription: 'Gives weather info of any city',
-    description:
-      'You can get up-to-date, accurate weather information with a 48-hour forecast for any city using WeatherSite. It has a slick, modern design, a lovely user interface, and dynamic backgrounds that change depending on the weather.',
-    filter: ['react', 'superverse'],
+  'super-chess': {
+    title: 'SuperChess',
+    category: 'Game, React, Spring Boot',
+    date: 'Jan 2026',
+    url: 'https://superchess.iamraj.dev/',
+    shortDescription: 'Free online multiplayer chess game with AI bot',
+    description: "A fully functional, real-time multiplayer online chess application built with Spring Boot (Java) backend and React (Vite) frontend. Features WebSocket communication for instant synchronization, AI opponents powered by Stockfish, Google OAuth authentication, and a modern responsive UI.",
+    filter: ['react', 'spring boot', 'superverse'],
     display: true,
   },
   'super-snake': {
@@ -43,17 +31,6 @@ export const PROJECTS_DATA = {
     filter: ['bootstrap', 'superverse'],
     display: true,
   },
-  notesnap: {
-    title: 'NoteSnap',
-    category: 'Chrome Extension',
-    date: 'Jan 2023',
-    url: 'https://github.com/RAJ4823/NoteSnap',
-    shortDescription: 'Note-Taking Chrome Extenstion',
-    description:
-      "It is a Chrome Extension for taking note of important details on any website. You can quickly highlight and save any text with just one click. You can also copy, delete or download notes. With NoteSnap, you'll never lose important information again.",
-    filter: ['extension'],
-    display: true,
-  },
   'super-notes': {
     title: 'SuperNotes',
     category: 'Website, Bootstrap, Design',
@@ -65,6 +42,39 @@ export const PROJECTS_DATA = {
     filter: ['bootstrap', 'superverse'],
     display: true,
   },
+  'login-system': {
+    title: 'Login System',
+    category: 'MERN Stack',
+    date: 'Oct 2023',
+    url: 'https://login-system-raj4823.onrender.com/',
+    shortDescription: 'MERN Stack based Complete Login System',
+    description:
+      'A MERN stack-based login system with user registration, secure authentication, profile management, password recovery with OTP, and email notifications, and more.',
+    filter: ['react', 'superverse', 'mern stack'],
+    display: true,
+  },
+  'weather-site': {
+    title: 'Weather Site',
+    category: 'React, API',
+    date: 'Feb 2023',
+    url: 'https://raj4823.github.io/WeatherSite',
+    shortDescription: 'Gives weather info of any city',
+    description:
+      'You can get up-to-date, accurate weather information with a 48-hour forecast for any city using WeatherSite. It has a slick, modern design, a lovely user interface, and dynamic backgrounds that change depending on the weather.',
+    filter: ['react', 'superverse'],
+    display: true,
+  },
+  notesnap: {
+    title: 'NoteSnap',
+    category: 'Chrome Extension',
+    date: 'Jan 2023',
+    url: 'https://github.com/RAJ4823/NoteSnap',
+    shortDescription: 'Note-Taking Chrome Extenstion',
+    description:
+      "It is a Chrome Extension for taking note of important details on any website. You can quickly highlight and save any text with just one click. You can also copy, delete or download notes. With NoteSnap, you'll never lose important information again.",
+    filter: ['extension'],
+    display: true,
+  },
   'my-site-old': {
     title: 'My Site v1.0',
     category: 'Portfolio Site, Bootstrap, Design',
@@ -74,9 +84,9 @@ export const PROJECTS_DATA = {
     description:
       'Version 1.0 of my portfolio, built purely with Bootstrap, HTML and CSS. It delivered a solid, fast, fully responsive single‑page experience and remained publicly live for about two years before being replaced by v2.0 in Oct 2025.',
     filter: ['bootstrap', 'superverse'],
-    display: true,
+    display: false,
   },
-  nmhp: {
+  'nmhp': {
     title: 'NMHP',
     category: 'UI',
     date: 'Mar 2022',
