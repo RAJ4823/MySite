@@ -1,155 +1,83 @@
-import { useState, useRef, useEffect } from 'react';
-import { Box, Grid, Typography, Paper } from '@mui/material';
+import { useState } from 'react';
+import { Box } from '@mui/material';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import Background3D from '../components/Background3D';
 import ProjectModal from '../components/ProjectModal';
-import { trackEvent } from '../analytics';
 
 import { PROJECTS_DATA } from '../data/projects';
 
 // Import Sections
 import Section from '../components/Section';
-import { 
-  HomeSection, 
-  AboutSection, 
-  EducationSection, 
+import {
+  HomeSection,
+  AboutSection,
+  EducationSection,
   ExperienceSection,
   SkillsSection,
   ProjectsSection
 } from '../sections';
-import ScrollHint from '../components/ScrollHint';
-
 
 export default function Home() {
-  const entries = Object.entries(PROJECTS_DATA);
-  const projects = entries.slice(0, 6);
   const [openKey, setOpenKey] = useState(null);
-  const [solarOpen, setSolarOpen] = useState(false);
-  const audioRef = useRef(null);
-  const audioSrc = `${import.meta.env.VITE_BASE_URL || '/'}sounds/interstellar_stay.mp3`;
-
-  // Optional: prepare audio only after the whole page has loaded (no autoplay)
-  useEffect(() => {
-    const onWindowLoad = () => {
-      if (!audioRef.current) {
-        const a = new Audio(audioSrc);
-        a.loop = true;
-        a.preload = 'auto'; // allow browser to fetch after load
-        a.volume = 0.5;
-        audioRef.current = a;
-      }
-      window.removeEventListener('load', onWindowLoad);
-    };
-    window.addEventListener('load', onWindowLoad);
-    return () => window.removeEventListener('load', onWindowLoad);
-  }, [audioSrc]);
   const selected = openKey ? PROJECTS_DATA[openKey] : null;
 
-  const playMusic = () => {
-    try {
-      let a = audioRef.current;
-      if (!a) {
-        // Lazy instantiate on first user interaction
-        a = new Audio(audioSrc);
-        a.loop = true;
-        a.preload = 'auto';
-        a.volume = 0.5;
-        audioRef.current = a;
-      }
-      a.currentTime = 0;
-      a.play().catch(() => {});
-    } catch {}
-  };
-
-  const stopMusic = () => {
-    try {
-      const a = audioRef.current;
-      if (a) { a.pause(); a.currentTime = 0; }
-    } catch {}
-  };
-  // Optimize blur performance by using transform and will-change
+  // Blur when modal is open
   const blurStyle = {
     position: 'relative',
     zIndex: 1,
-    transform: 'translateZ(0)', // Create a new layer for GPU acceleration
-    willChange: 'transform', // Hint browser about the upcoming transform
+    transform: 'translateZ(0)',
+    willChange: 'transform',
     transition: 'filter 0.2s ease-out, transform 0.2s ease-out',
-    filter: openKey || solarOpen ? 'blur(4px)' : 'none',
-    // Disable hover effects when modal is open for better performance
-    pointerEvents: openKey || solarOpen ? 'none' : 'auto',
+    filter: openKey ? 'blur(4px)' : 'none',
+    pointerEvents: openKey ? 'none' : 'auto',
     '& *': {
-      pointerEvents: openKey || solarOpen ? 'none' : 'auto',
+      pointerEvents: openKey ? 'none' : 'auto',
     }
   };
 
   return (
     <Box sx={{ position: 'relative' }}>
-      {/* Passive background solar system */}
-      <Background3D mode="background" />
-      {/* Interactive overlay when opened */}
-      {solarOpen && (
-        <Box sx={{ position: 'fixed', inset: 0, zIndex: 60, transform: 'translateZ(0)' }}>
-          <Navbar
-            overlay
-            onBack={() => {
-              stopMusic();
-              setSolarOpen(false);
-              setTimeout(() => window.dispatchEvent(new CustomEvent('solar_cam_updated')), 50);
-            }}
-          />
-          <Background3D mode="interactive" />
-        </Box>
-      )}
       <Box sx={blurStyle}>
-        <Navbar onOpenSolar={() => {
-          playMusic();
-          setSolarOpen(true);
-          trackEvent('solar_overlay_open');
-        }} />
+        <Navbar variant="home" />
 
-      <Section id="home" glass={false}>
-        <HomeSection />
-      </Section>
+        <Section id="home" glass={false}>
+          <HomeSection />
+        </Section>
 
-      <Section id="about">
-        <AboutSection />
-      </Section>
+        <Section id="about">
+          <AboutSection />
+        </Section>
 
-      <Section id="education">
-        <EducationSection />
-      </Section>
+        <Section id="education">
+          <EducationSection />
+        </Section>
 
-      <Section id="experience">
-        <ExperienceSection />
-      </Section>
+        <Section id="experience">
+          <ExperienceSection />
+        </Section>
 
-      <Section id="skills">
-        <SkillsSection />
-      </Section>
+        <Section id="skills">
+          <SkillsSection />
+        </Section>
 
-      <Section id="projects">
-        <ProjectsSection onProjectOpen={setOpenKey} />
-      </Section>
+        <Section id="projects">
+          <ProjectsSection onProjectOpen={setOpenKey} />
+        </Section>
 
-      <Footer />
+        <Footer />
 
-      <ProjectModal 
-        open={!!openKey} 
-        onClose={() => {
-          // Start the close animation
-          const content = document.querySelector('.modal-content');
-          if (content) content.style.animation = 'fadeOut 0.2s forwards';
-          
-          // Wait for animation to complete before unmounting
-          setTimeout(() => {
-            setOpenKey(null);
-          }, 200);
-        }} 
-        projectKey={openKey} 
-        project={selected} 
-      />
+        <ProjectModal
+          open={!!openKey}
+          onClose={() => {
+            const content = document.querySelector('.modal-content');
+            if (content) content.style.animation = 'fadeOut 0.2s forwards';
+            setTimeout(() => setOpenKey(null), 200);
+          }}
+          projectKey={openKey}
+          project={selected}
+        />
       </Box>
     </Box>
   );
 }
+

@@ -19,6 +19,7 @@ export const PROJECTS_DATA = {
     description: "A fully functional, real-time multiplayer online chess application built with Spring Boot (Java) backend and React (Vite) frontend. Features WebSocket communication for instant synchronization, AI opponents powered by Stockfish, Google OAuth authentication, and a modern responsive UI.",
     filter: ['react', 'spring boot', 'superverse'],
     display: true,
+    blogSlug: 'building-superchess',
   },
   'super-snake': {
     title: 'SuperSnake',

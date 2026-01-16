@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
@@ -8,7 +9,8 @@ import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { trackEvent } from '../analytics';
+import ArticleIcon from '@mui/icons-material/Article';
+import { trackEvent } from '../utils/analytics';
 
 export default function ProjectCard({ projectKey, project, onOpen }) {
   const imgSrc = `${import.meta.env.VITE_BASE_URL || '/'}images/portfolio/${projectKey}.jpg`;
@@ -47,7 +49,12 @@ export default function ProjectCard({ projectKey, project, onOpen }) {
         </CardContent>
       </CardActionArea>
       <CardActions sx={{ justifyContent: 'space-between', alignItems: 'center', px: 2, py: 1, minHeight: 52, bgcolor: 'rgba(255,255,255,0.02)' }}>
-        <Button disabled={isCurrentSite || !project.url} href={project.url} target="_blank" rel="noopener" variant="text" onClick={() => trackEvent('project_visit', { project_key: projectKey, url: project.url })}>Visit</Button>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Button disabled={isCurrentSite || !project.url} href={project.url} target="_blank" rel="noopener" variant="text" onClick={() => trackEvent('project_visit', { project_key: projectKey, url: project.url })}>Visit</Button>
+          {project.blogSlug &&
+            <Button component={Link} to={`/blogs/${project.blogSlug}`} variant="text" color="primary" onClick={() => trackEvent('project_blog_click', { project_key: projectKey, blog_slug: project.blogSlug })}>Blog</Button>
+          }
+        </Box>
         <Tooltip title="Quick view">
           <IconButton onClick={() => { trackEvent('project_open', { project_key: projectKey, where: 'icon' }); onOpen && onOpen(projectKey); }} size="small" color="primary">
             <VisibilityIcon fontSize="small" />
@@ -57,3 +64,4 @@ export default function ProjectCard({ projectKey, project, onOpen }) {
     </Card>
   );
 }
+

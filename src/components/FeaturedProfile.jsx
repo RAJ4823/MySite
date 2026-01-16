@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { trackEvent } from '../analytics';
+import { trackEvent } from '../utils/analytics';
 
 // Candidate image names in public/profile (existing files)
 const candidates = ['me0.png', 'me1.png', 'me2.png', 'me3.png'];

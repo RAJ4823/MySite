@@ -1,68 +1,244 @@
+import { Link, useLocation } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-// import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import { useCallback, useState } from 'react';
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { trackEvent } from '../analytics';
+import { trackEvent } from '../utils/analytics';
 
-const pages = [
-  { label: 'Home', id: 'home' },
+// Section navigation items for home page
+const homeSections = [
   { label: 'About', id: 'about' },
-  // { label: 'Education', id: 'education' },
   { label: 'Experience', id: 'experience' },
   { label: 'Skills', id: 'skills' },
   { label: 'Projects', id: 'projects' },
 ];
 
-export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
+/**
+ * Unified Navbar component with optional secondary section navigation
+ * @param {string} variant - 'home' | 'solar' | 'blogs' | 'blogDetail'
+ */
+export default function Navbar({ variant = 'home' }) {
+  const location = useLocation();
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
 
-  const go = useCallback((id) => {
+  // Auto-detect variant based on route if not specified
+  const getVariant = () => {
+    if (variant !== 'home') return variant;
+    if (location.pathname === '/solar-system') return 'solar';
+    if (location.pathname.startsWith('/blogs/') && location.pathname !== '/blogs') return 'blogDetail';
+    if (location.pathname === '/blogs') return 'blogs';
+    return 'home';
+  };
+
+  const currentVariant = getVariant();
+  const isHome = currentVariant === 'home';
+
+  const scrollTo = useCallback((id) => {
     trackEvent('nav_click', { section: 'navbar', label: id });
     const el = document.getElementById(id);
     if (el) {
-      // Update URL with hash
       if (window.history.pushState) {
         const newUrl = `${window.location.pathname}${window.location.search}#${id}`;
         window.history.pushState({ path: newUrl }, '', newUrl);
       } else {
         window.location.hash = `#${id}`;
       }
-      // Smooth scroll to element
-      el.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-        inline: 'nearest'
-      });
+      el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     }
   }, []);
 
   const handleMenuOpen = (e) => setAnchorEl(e.currentTarget);
+  const handleMenuClose = () => setAnchorEl(null);
   const handleMenuCloseAndGo = (id) => {
     setAnchorEl(null);
-    if (id) go(id);
+    if (id) scrollTo(id);
   };
 
+  // Render back button for non-home variants
+  const renderBackButton = () => {
+    if (currentVariant === 'solar' || currentVariant === 'blogs') {
+      return (
+        <>
+          <Box sx={{ flexGrow: 1 }} />
+          <Button
+            component={Link}
+            to="/"
+            startIcon={<ArrowBackIcon />}
+            color="inherit"
+            sx={{
+              fontWeight: 600,
+              '&:hover': {
+                color: 'primary.light',
+                bgcolor: 'rgba(124,58,237,0.1)',
+              },
+            }}
+            onClick={() => trackEvent('nav_click', { section: 'navbar', label: 'back_home' })}
+          >
+            Home
+          </Button>
+        </>
+      );
+    }
+    if (currentVariant === 'blogDetail') {
+      return (
+        <>
+          <Box sx={{ flexGrow: 1 }} />
+          <Button
+            component={Link}
+            to="/blogs"
+            startIcon={<ArrowBackIcon />}
+            color="inherit"
+            sx={{
+              fontWeight: 600,
+              '&:hover': {
+                color: 'primary.light',
+                bgcolor: 'rgba(124,58,237,0.1)',
+              },
+            }}
+            onClick={() => trackEvent('nav_click', { section: 'navbar', label: 'back_blogs' })}
+          >
+            All Blogs
+          </Button>
+        </>
+      );
+    }
+    return null;
+  };
+
+  // Render main nav (Blogs, Solar System) - right side
+  const renderMainNav = () => (
+    <>
+      <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1 }}>
+        {homeSections.map((p) => (
+          <Button
+            key={p.id}
+            color="inherit"
+            size="small"
+            href={`#${p.id}`}
+            onClick={(e) => { e.preventDefault(); scrollTo(p.id); }}
+            sx={{
+              fontWeight: 500,
+              fontSize: '0.9rem',
+              color: 'text.secondary',
+              '&:hover': {
+                color: 'primary.light',
+                bgcolor: 'rgba(124,58,237,0.1)',
+              },
+            }}
+          >
+            {p.label}
+          </Button>
+        ))}
+      </Box>
+
+      <Box sx={{ flexGrow: 1 }} />
+
+      {/* Desktop: Blogs & Solar System */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0, md: 1 } }}>
+        <Button
+          component={Link}
+          to="/blogs"
+          color="inherit"
+          sx={{
+            fontWeight: 600,
+            '&:hover': {
+              color: 'primary.light',
+              bgcolor: 'rgba(124,58,237,0.1)',
+            },
+          }}
+          onClick={() => trackEvent('nav_click', { section: 'navbar', label: 'blogs' })}
+        >
+          Blogs
+        </Button>
+        <Button
+          component={Link}
+          to="/solar-system"
+          color="inherit"
+          sx={{
+            fontWeight: 600,
+            '&:hover': {
+              color: 'primary.light',
+              bgcolor: 'rgba(124,58,237,0.1)',
+            },
+          }}
+          onClick={() => trackEvent('nav_click', { section: 'navbar', label: 'solar_system' })}
+        >
+          Solar System
+        </Button>
+      </Box>
+
+      {/* Mobile: Menu for sections */}
+      <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 0.5 }}>
+        <IconButton
+          size="small"
+          color="inherit"
+          aria-label={menuOpen ? 'close menu' : 'open menu'}
+          onClick={handleMenuOpen}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Menu
+          id="nav-menu"
+          anchorEl={anchorEl}
+          open={menuOpen}
+          onClose={handleMenuClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          keepMounted
+          MenuListProps={{ dense: true }}
+        >
+          {homeSections.map((p) => (
+            <MenuItem key={p.id} onClick={() => handleMenuCloseAndGo(p.id)} sx={{
+              fontWeight: 500,
+              fontSize: '0.9rem',
+              color: 'text.secondary',
+              '&:hover': {
+                color: 'primary.light',
+              }
+            }}>
+              {p.label}
+            </MenuItem>
+          ))}
+        </Menu>
+      </Box>
+    </>
+  );
+
   return (
-    <AppBar position="sticky" color="transparent" sx={{ backdropFilter: 'blur(10px)', bgcolor: 'rgba(18,18,26,0.6)', borderBottom: '1px solid', borderColor: 'divider' }}>
+    <AppBar
+      position="sticky"
+      color="transparent"
+      sx={{
+        backdropFilter: 'blur(10px)',
+        bgcolor: 'rgba(18,18,26,0.6)',
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+      }}
+    >
+      {/* Main navbar */}
       <Container maxWidth="lg">
-        <Toolbar disableGutters sx={{ gap: 2 }}>
-          {/* Logo - always left */}
-          <div onClick={() => go('home')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+        <Toolbar disableGutters sx={{ gap: { xs: 1, md: 2 }, minHeight: { xs: 56, md: 64 } }}>
+          {/* Logo - always links to home */}
+          <Link
+            to="/"
+            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}
+            onClick={() => trackEvent('nav_click', { section: 'navbar', label: 'logo' })}
+          >
             <Box
               component="img"
               src={`${import.meta.env.VITE_BASE_URL || '/'}images/logo/purple_logo.png`}
               alt="Logo"
               sx={{
-                height: { xs: 56, sm: 72, md: 80 },
-                margin: { xs: '-6px', sm: '-8px', md: '-10px' },
+                height: { xs: 48, sm: 60, md: 70 },
+                margin: { xs: '-4px', sm: '-6px', md: '-8px' },
                 cursor: 'pointer',
                 filter: 'contrast(1) saturate(4)',
                 '&:hover': {
@@ -71,75 +247,10 @@ export default function Navbar({ overlay = false, onBack, onOpenSolar }) {
                 },
               }}
             />
-          </div>
-          {/* Spacer to push actions to right */}
-          <Box sx={{ flexGrow: 1 }} />
+          </Link>
 
-          {/* Desktop nav buttons */}
-          {!overlay && (
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1 }}>
-              {pages.map((p) => (
-                <Button key={p.id} color="inherit" href={`#${p.id}`} onClick={(e) => { e.preventDefault(); go(p.id); }} sx={{ fontWeight: 600 }}>
-                  {p.label}
-                </Button>
-              ))}
-              {onOpenSolar && (
-                <Button variant="outlined" color="secondary" onClick={() => { trackEvent('nav_click', { section: 'navbar', label: 'view_solar_system' }); onOpenSolar(); }} sx={{ fontWeight: 700, ml: 1 }}>
-                  View Solar System
-                </Button>
-              )}
-            </Box>
-          )}
-
-          {/* Mobile menu icon + simple Menu popup */}
-          {!overlay && (
-            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-              <IconButton
-                size="large"
-                color="inherit"
-                aria-label={menuOpen ? 'close navigation menu' : 'open navigation menu'}
-                onClick={handleMenuOpen}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                id="nav-menu"
-                anchorEl={anchorEl}
-                open={menuOpen}
-                onClose={() => setAnchorEl(null)}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                keepMounted
-                MenuListProps={{ dense: true }}
-              >
-                {pages.map((p) => (
-                  <MenuItem key={p.id} onClick={() => handleMenuCloseAndGo(p.id)}>
-                    {p.label}
-                  </MenuItem>
-                ))}
-                {onOpenSolar && (
-                  <Box sx={{ px: 1.5, py: 1 }}>
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      onClick={() => { setAnchorEl(null); trackEvent('nav_click', { section: 'navbar', label: 'view_solar_system' }); onOpenSolar?.(); }}
-                      fullWidth
-                      sx={{ fontWeight: 700 }}
-                    >
-                      View Solar System
-                    </Button>
-                  </Box>
-                )}
-              </Menu>
-            </Box>
-          )}
-
-          {/* Overlay back button (always right) */}
-          {overlay && (
-            <Button variant="outlined" color="secondary" onClick={() => { trackEvent('nav_click', { section: 'overlay', label: 'close_solar_system' }); onBack?.(); }} sx={{ fontWeight: 700 }}>
-              Back to MySite
-            </Button>
-          )}
+          {/* Navigation based on variant */}
+          {isHome ? renderMainNav() : renderBackButton()}
         </Toolbar>
       </Container>
     </AppBar>

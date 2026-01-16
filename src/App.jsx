@@ -1,7 +1,13 @@
 import { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import Box from '@mui/material/Box';
 import Home from './pages/Home';
-import { initGA, startEngagementTracking, initClickTracking, trackPageView } from './analytics';
+import Blogs from './pages/Blogs';
+import BlogDetail from './pages/BlogDetail';
+import SolarSystem from './pages/SolarSystem';
+import NotFound from './pages/NotFound';
+import Background3D from './components/Background3D';
+import { initGA, startEngagementTracking, initClickTracking, trackPageView } from './utils/analytics';
 
 function ScrollToHashElement() {
   const location = useLocation();
@@ -28,6 +34,7 @@ function ScrollToHashElement() {
 
 export default function App() {
   const location = useLocation();
+  const isSolarSystem = location.pathname === '/solar-system';
 
   useEffect(() => {
     initGA();
@@ -40,12 +47,21 @@ export default function App() {
   }, [location]);
 
   return (
-    <>
-      <ScrollToHashElement />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="*" element={<Home />} />
-      </Routes>
-    </>
+    <Box sx={{ position: 'relative', minHeight: '100vh' }}>
+      {/* Persistent solar system background - skip for solar-system page which has its own */}
+      <Background3D mode={isSolarSystem ? 'interactive' : 'background'} />
+
+      {/* Page content layer */}
+      <Box sx={{ position: 'relative', zIndex: isSolarSystem ? 'auto' : 1 }}>
+        <ScrollToHashElement />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/blogs/:slug" element={<BlogDetail />} />
+          <Route path="/solar-system" element={<SolarSystem />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Box>
+    </Box>
   );
 }

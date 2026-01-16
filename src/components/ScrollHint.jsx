@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Box, Typography } from '@mui/material';
-import { trackEvent } from '../analytics';
+import { trackEvent } from '../utils/analytics';
 
 const SCROLL_THRESHOLD = 100; // Pixels to scroll before hiding the hint
 const FIRST_VISIT_DELAY = 10000; // 10 seconds for first visit
@@ -41,7 +41,7 @@ export default function ScrollHint() {
 
     // Add scroll event listener
     window.addEventListener('scroll', handleScroll);
-    
+
     // Cleanup
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -84,7 +84,7 @@ export default function ScrollHint() {
         }
       }}
     >
-      <Box 
+      <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
