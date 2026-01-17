@@ -2,12 +2,13 @@
 export const BLOGS_DATA = {
     'building-superchess': {
         slug: 'building-superchess',
-        title: 'SuperChess: Building a Production-Grade, Real-Time Multiplayer Chess Platform from Scratch',
+        title: 'Building SuperChess: A Production-Ready Real-Time Multiplayer Chess Platform',
         shortTitle: 'Building SuperChess',
-        excerpt: 'A deep-dive into building a full-stack, real-time chess platform—covering architecture, the technical hurdles, and how I solved each one.',
+        excerpt: 'How I built SuperChess from scratch with WebSockets, Stockfish AI integration, authentication, and the key engineering challenges I solved along the way.',
         date: 'Jan 2026',
-        tags: ['React', 'Spring Boot', 'WebSocket', 'Stockfish'],
+        tags: ['React', 'Spring Boot', "PostgreSQL", "Stockfish", "OAuth2"],
         coverImage: 'images/portfolio/super-chess.jpg',
+        linkedinPostUrl: 'https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7416433298438156288?collapsed=1',
         // Link to related project in projects.js
         projectKey: 'super-chess',
     },

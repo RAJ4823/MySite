@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProjectModal from '../components/ProjectModal';
+import { solarAudio } from '../utils/audioManager';
 
 import { PROJECTS_DATA } from '../data/projects';
 
@@ -20,6 +21,11 @@ import {
 export default function Home() {
   const [openKey, setOpenKey] = useState(null);
   const selected = openKey ? PROJECTS_DATA[openKey] : null;
+
+  // Preload solar system audio on home page mount
+  useEffect(() => {
+    solarAudio.initialize();
+  }, []);
 
   // Blur when modal is open
   const blurStyle = {
