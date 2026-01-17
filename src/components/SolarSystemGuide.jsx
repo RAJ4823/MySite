@@ -9,16 +9,10 @@ import MouseIcon from '@mui/icons-material/Mouse';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import { trackEvent } from '../utils/analytics';
+import { useMediaQuery } from '@mui/material';
 
 export default function SolarSystemGuide({ open, onClose, showCloseButton = true }) {
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        setIsMobile(window.innerWidth < 768);
-        const handleResize = () => setIsMobile(window.innerWidth < 768);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    const isMobile = useMediaQuery(theme => theme.breakpoints.down('md'));
 
     useEffect(() => {
         if (open) {

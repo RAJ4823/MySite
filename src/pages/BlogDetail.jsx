@@ -16,6 +16,7 @@ import { getBlogBySlug } from '../data/blogs';
 import { trackEvent } from '../utils/analytics';
 import useSEO from '../hooks/useSEO';
 import { calculateReadTime } from '../utils/readTime';
+import { useMediaQuery } from '@mui/material';
 
 
 const createMarkdownComponents = (toc, TableOfContents) => ({
@@ -288,6 +289,7 @@ export default function BlogDetail() {
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const isMobile = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
     // Generate TOC from content
     const toc = content ? generateTOC(content) : [];
@@ -403,7 +405,7 @@ export default function BlogDetail() {
                         <Typography variant="h6" sx={{ mb: 2 }}>
                             LinkedIn Post
                         </Typography>
-                        <iframe src={blog.linkedinPostUrl} height="600" width="600" frameborder="0" allowfullscreen="" title="Embedded post"></iframe>
+                        <iframe src={blog.linkedinPostUrl} height="548px" width={isMobile ? '100%' : '504px'} frameBorder="0" allowFullScreen title="Embedded post"></iframe>
                     </Box>
                 )}
 
