@@ -4,6 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import { useCallback, useState } from 'react';
@@ -11,6 +12,7 @@ import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { trackEvent } from '../utils/analytics';
+import { solarAudio } from '../utils/audioManager';
 
 // Section navigation items for home page
 const homeSections = [
@@ -23,8 +25,9 @@ const homeSections = [
 /**
  * Unified Navbar component with optional secondary section navigation
  * @param {string} variant - 'home' | 'solar' | 'blogs' | 'blogDetail'
+ * @param {function} onGuideClick - Callback for solar system guide (solar variant only)
  */
-export default function Navbar({ variant = 'home' }) {
+export default function Navbar({ variant = 'home', onGuideClick }) {
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
@@ -62,9 +65,58 @@ export default function Navbar({ variant = 'home' }) {
     if (id) scrollTo(id);
   };
 
+  const handleLogoClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    trackEvent('nav_click', { section: 'navbar', label: 'logo' });
+  };
+
   // Render back button for non-home variants
   const renderBackButton = () => {
-    if (currentVariant === 'solar' || currentVariant === 'blogs') {
+    if (currentVariant === 'solar') {
+      return (
+        <>
+          {onGuideClick && (
+            <Button
+              onClick={() => {
+                trackEvent('nav_click', { section: 'navbar', label: 'solar_guide' });
+                onGuideClick();
+              }}
+              startIcon={<HelpOutlineIcon />}
+              color="inherit"
+              sx={{
+                fontWeight: 500,
+                fontSize: '0.9rem',
+                color: 'text.secondary',
+                '&:hover': {
+                  color: 'primary.light',
+                  bgcolor: 'rgba(124,58,237,0.1)',
+                },
+              }}
+            >
+              How to interact?
+            </Button>
+          )}
+          <Box sx={{ flexGrow: 1 }} />
+          <Button
+            component={Link}
+            to="/"
+            startIcon={<ArrowBackIcon />}
+            color="inherit"
+            sx={{
+              fontWeight: 600,
+              '&:hover': {
+                color: 'primary.light',
+                bgcolor: 'rgba(124,58,237,0.1)',
+              },
+            }}
+            onClick={() => trackEvent('nav_click', { section: 'navbar', label: 'back_home' })}
+          >
+            Home
+          </Button>
+        </>
+      );
+    }
+    if (currentVariant === 'blogs') {
       return (
         <>
           <Box sx={{ flexGrow: 1 }} />
@@ -169,7 +221,10 @@ export default function Navbar({ variant = 'home' }) {
               bgcolor: 'rgba(124,58,237,0.1)',
             },
           }}
-          onClick={() => trackEvent('nav_click', { section: 'navbar', label: 'solar_system' })}
+          onClick={() => {
+            trackEvent('nav_click', { section: 'navbar', label: 'solar_system' });
+            solarAudio.play();
+          }}
         >
           Solar System
         </Button>
@@ -230,7 +285,7 @@ export default function Navbar({ variant = 'home' }) {
           <Link
             to="/"
             style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}
-            onClick={() => trackEvent('nav_click', { section: 'navbar', label: 'logo' })}
+            onClick={handleLogoClick}
           >
             <Box
               component="img"

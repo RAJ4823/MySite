@@ -13,7 +13,7 @@ export default function BlogList() {
 
     useSEO({
         title: 'Blogs',
-        description: 'Read about my projects, technical challenges, and lessons learned along the way.',
+        description: 'A space where I share ideas, stories, and things I’m learning—ranging from tech and building projects to travel, science, and anything else that sparks curiosity.',
         canonical: '/blogs',
     });
 
@@ -27,15 +27,15 @@ export default function BlogList() {
                     Blogs
                 </Typography>
                 <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-                    Read about my projects, technical challenges, and lessons learned along the way.
+                    A space where I share ideas, stories, and things I’m learning—ranging from tech and building projects to travel, science, and anything else that sparks curiosity.
                 </Typography>
 
                 {/* Blog Grid */}
                 {blogs.length > 0 ? (
                     <>
-                        <Grid container spacing={3}>
+                        <Grid container spacing={2}>
                             {blogs.map((blog) => (
-                                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={blog.slug}>
+                                <Grid size={{ xs: 12, sm: 6, md: 6 }} key={blog.slug}>
                                     <BlogCard blog={blog} />
                                 </Grid>
                             ))}

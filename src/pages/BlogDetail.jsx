@@ -295,8 +295,8 @@ export default function BlogDetail() {
     const blog = getBlogBySlug(slug);
 
     useSEO({
-        title: `${blog.shortTitle || blog.title} | Blogs`,
-        description: blog.description,
+        title: `${blog?.shortTitle || blog?.title || 'Blog Not Found'} | Blogs`,
+        description: blog?.description || 'Blog Not Found',
         canonical: `/blogs/${slug}`,
     });
 
@@ -397,6 +397,15 @@ export default function BlogDetail() {
                         {content}
                     </ReactMarkdown>
                 </Box>
+
+                {blog.linkedinPostUrl && (
+                    <Box sx={{ mt: 4, p: 3, bgcolor: 'rgba(124,58,237,0.1)', borderRadius: 2, textAlign: 'center', backdropFilter: 'blur(8px)' }}>
+                        <Typography variant="h6" sx={{ mb: 2 }}>
+                            LinkedIn Post
+                        </Typography>
+                        <iframe src={blog.linkedinPostUrl} height="600" width="600" frameborder="0" allowfullscreen="" title="Embedded post"></iframe>
+                    </Box>
+                )}
 
                 {/* Related Project Link */}
                 {blog.projectKey && (

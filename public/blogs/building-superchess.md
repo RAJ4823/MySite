@@ -1,10 +1,12 @@
-# SuperChess: Building a Production-Grade, Real-Time Multiplayer Chess Platform from Scratch
+# Building SuperChess: A Production-Ready Real-Time Multiplayer Chess Platform
 
 ---
 
-## The "Super" Summary
+## Super Summary
 
 **TL;DR:** I built a full-stack, real-time chess platform—not because I wanted to play chess, but because I wanted to build something complex, production-ready, and genuinely enjoyable. This post covers the architecture, the five biggest technical hurdles I faced, and how I solved each one.
+
+🔗 **Live App:** https://superchess.iamraj.dev
 
 ---
 
@@ -40,22 +42,212 @@ Chess checked all the boxes. Real-time multiplayer, server-validated game state,
 SuperChess is the result: a full-stack monorepo running entirely on free-tier infrastructure, with features I'm actually proud of.
 
 ---
+## Key Features
+
+#### 🎮 Game Modes
+- **Online Matchmaking** — Automatic pairing with players worldwide
+- **Friend Games** — Private rooms with 6-digit invite codes
+- **AI Opponents** — Stockfish engine at 3 levels (SuperPawn, SuperKnight, SuperGrandmaster)
+
+#### ⏱️ Time Controls
+- Bullet (1 min), Blitz (3 min), Rapid (10 min), Classical (30 min)
+
+#### 🔐 Authentication
+- Email/Password with BCrypt hashing
+- Google OAuth 2.0 with automatic profile picture sync
+- JWT-based session management
+
+#### 📊 Gameplay
+- Real-time WebSocket synchronization
+- Server-side move validation (anti-cheat)
+- Live position evaluation bar (Stockfish WASM)
+- Captured pieces display with material difference
+- Full move history with algebraic notation
+
+#### 🎨 UX Polish
+- Dark/Light theme with system preference detection
+- Responsive design (mobile, tablet, desktop)
+- Sound effects for moves, captures, check, game end
+- Built-in **Report Bug** and **Request Feature** pages
+
+---
+
+## Architecture Overview
+
+SuperChess follows a clean **client-server architecture** where the server is the single source of truth for all game state.
+
+### High-Level System Design
+
+![SuperChess Architecture](/images/diagrams/diagram-superchess.svg)
+
+### Separation of Concerns
+
+**Frontend Responsibilities:**
+- Render UI based on server state
+- Optimistic updates (show move immediately, wait for confirmation)
+- Client-side position evaluation (Stockfish WASM for eval bar)
+- Audio/visual feedback
+- Theme management
+
+**Backend Responsibilities:**
+- **All game logic validation** (server is source of truth)
+- Timer management & timeout detection
+- Move legality verification via chesslib
+- AI move generation via Stockfish subprocess
+- User authentication & authorization
+- Persistent state in PostgreSQL
+
+**Why this matters:** The client never makes game decisions. It only suggests moves. The server validates, applies, and broadcasts results. This prevents cheating and ensures consistency.
+
+---
+
+## WebSocket Event Design
+
+SuperChess uses **STOMP over WebSocket** for real-time communication. The server broadcasts events, and clients subscribe to game-specific topics.
+
+
+### Event Types
+
+| Message Type | Direction | Purpose |
+|-----------|-----------|---------|
+| `MOVE_REQUEST` | Client → Server | Player sends move request (`{from, to, promotion}`) |
+| `MOVE_RESPONSE` | Server → Clients | Move result/response broadcast (`{success, newFen, gameStatus, isCheck, isCheckmate}`) |
+| `TIMER_SYNC` | Server → Clients | Sync clocks after each move (`{whiteTimeMs, blackTimeMs, activePlayer, serverTimestamp}`) |
+| `GAME_END` | Server → Clients | Announce game over (`{status, winner, whiteTimeMs, blackTimeMs}`) |
+| `GAME_STATE_UPDATE` | Server → Clients | Game state changed (player joined, etc.) |
+
+### How Server Broadcasts Work
+
+1. **Client subscribes** to `/topic/game/{gameId}` after joining a game
+2. **Client sends move** via `/app/game/move/{gameId}` with `MOVE_REQUEST {from: "e2", to: "e4", promotion: null}`
+3. **Server validates** the move, updates DB, and broadcasts `MOVE_RESPONSE` to all subscribers
+4. **Timer sync** happens automatically after each move via `TIMER_SYNC` message
+
+### Event Ordering & Consistency
+
+- **Server is sequential:** Moves are processed one at a time per game (no race conditions)
+- **Session isolation:** Each WebSocket connection is tied to a JWT-authenticated user
+- **Optimistic UI, server reconciliation:** Client shows move immediately but reverts if server rejects it
+
+---
+
+## Data Model
+
+PostgreSQL stores all persistent state. Here's the core schema:
+
+#### Main Entities
+
+**`users`**
+```sql
+- id (PK)
+- username (unique)
+- email (unique)
+- password_hash (BCrypt)
+- picture_url (for OAuth users)
+- created_at
+```
+
+**`games`**
+```sql
+- id (PK)
+- white_player_id (FK → users)
+- black_player_id (FK → users, nullable for waiting games)
+- current_fen (FEN string representing board state)
+- status (WAITING | IN_PROGRESS | CHECKMATE | STALEMATE | DRAW | TIMEOUT)
+- current_turn ("WHITE" | "BLACK")
+- winner ("WHITE" | "BLACK" | null)
+- time_control (e.g., "10+0")
+- white_time_remaining_ms
+- black_time_remaining_ms
+- last_move_time (timestamp)
+- game_type (ONLINE | FRIEND | AI_BOT)
+- bot_difficulty (BEGINNER | INTERMEDIATE | EXPERT, if AI_BOT)
+- invite_code (6-digit code for friend games)
+- created_at, updated_at
+```
+
+**`moves`**
+```sql
+- id (PK)
+- game_id (FK → games)
+- move_number (1, 2, 3...)
+- from_square (e.g., "e2")
+- to_square (e.g., "e4")
+- piece (e.g., "PAWN")
+- promotion (e.g., "QUEEN", nullable)
+- fen_after_move (FEN snapshot after move)
+- is_check, is_checkmate (boolean)
+- timestamp
+```
+
+#### Why FEN + Move History?
+
+**FEN (Forsyth-Edwards Notation):** Compact representation of board state. Stored in `games.current_fen` and `moves.fen_after_move`.
+
+**Move storage:** Each move is stored with `from_square` and `to_square` (UCI format). This allows:
+- Full game replay
+- PGN export in the future
+- Debugging invalid positions
+
+**Why not just FEN?** Storing individual moves enables game history display, analysis, and statistics (e.g., "most common opening").
+
+---
+
+## Security & Production Readiness
+
+Security isn't an afterthought. Here's what I implemented:
+
+#### Authentication
+- **JWT tokens** with 7-day expiration, signed with `HS256`
+- **BCrypt password hashing** (cost factor 10)
+- **Google OAuth 2.0** for passwordless login
+- **Refresh tokens** (planned but not yet implemented)
+
+#### Authorization
+- **Game access control:** Users can only view/modify games they're part of
+- **WebSocket auth:** JWT token validated during STOMP `CONNECT` handshake
+- **Session mapping:** Each WebSocket session maps to a user ID
+
+#### Input Validation
+- **Move validation:** All moves verified via `chesslib` library (can't bypass UI)
+- **DTO validation:** Spring `@Valid` annotations on request bodies
+- **SQL injection prevention:** JPA parameterized queries
+
+#### Anti-Cheat Measures
+- **Server-side move validation:** Client can't inject illegal moves
+- **Timeout detection server-side:** Client can't fake clock state
+- **FEN integrity:** Server recomputes FEN after each move (client suggestions ignored)
+
+#### CORS & Cookies
+- **Allowed origins:** Only `https://superchess.iamraj.dev` in production
+- **HTTPS enforced** in production (Cloudflare Pages + Render)
+
+#### Rate Limiting
+Currently minimal (Spring Boot default). Future: Add per-user rate limits for API endpoints.
+
+---
 
 ## The Challenges (And How I Solved Them)
 
 ### 1. Timer Synchronization
 
-**The Problem:** In a distributed system, keeping two players' clocks synchronized is deceptively hard. Client-side `setInterval` drifts. Network latency creates ambiguity about who "owns" time during a move. Page refreshes can desync everything.
+**The Problem:** Distributed timers are hard. Client-side `setInterval` drifts. Network latency creates ambiguity. Page refreshes desync clocks.
 
-**The Solution:** I implemented **event-driven, server-authoritative timers**.
+**Core Idea:**
+- **Server is the authority** on time remaining
+- **Polling would cause drift** (database queries every second)
+- **Latency matters:** 50-200ms round trips add up
+- **Refreshes must recover** accurate state
 
-Instead of polling the database every second, the backend uses a `TimerSchedulerService` that:
-1. **Schedules a one-time timeout task** when a player's turn starts
-2. **Cancels the task** when the player makes a move
-3. **Triggers timeout handling** only when time actually runs out
+**The Solution:** Event-driven, server-authoritative timers.
+
+Instead of polling the database every second, I use a `TimerSchedulerService` with a `ScheduledExecutorService`:
+
+1. **Schedule timeout when turn starts**: `scheduleTimeout(gameId, "WHITE", 600000ms)`
+2. **Cancel timeout when move happens**: `cancelTimeout(gameId)`
+3. **Broadcast timer sync** after each move: `TIMER_SYNC` message with server timestamp
 
 ```java
-// Schedule timeout when turn starts
 public void scheduleTimeout(Long gameId, String player, long timeRemainingMs) {
     cancelTimeout(gameId); // Cancel any existing
     ScheduledFuture<?> task = scheduler.schedule(
@@ -67,17 +259,28 @@ public void scheduleTimeout(Long gameId, String player, long timeRemainingMs) {
 }
 ```
 
-After each move, the server broadcasts a `TIMER_SYNC` message with updated times and a server timestamp. Clients use this to correct their local display.
+After each move, the server broadcasts:
+```json
+{
+  "type": "TIMER_SYNC",
+  "whiteTimeMs": 587231,
+  "blackTimeMs": 600000,
+  "activePlayer": "BLACK",
+  "serverTimestamp": 1705230192841
+}
+```
 
-**Result:** No database polling, no drift, and the server is the single source of truth for timeout detection.
+Clients use this to correct local display.
+
+**Result:** No polling, no drift, precise timeout detection.
 
 ---
 
 ### 2. SEO in a Single Page Application
 
-**The Problem:** Google wasn't indexing my app at all. Every route returned the same `index.html`, with the same meta tags and title. Google saw no difference between `/home`, `/login`, and `/changelog`.
+**The Problem:** Google wasn't indexing my app. Every route returned the same `index.html` with identical meta tags.
 
-**The Solution:** I built a custom `useSEO` React hook that dynamically updates the document head on every route change.
+**The Solution:** Custom `useSEO` React hook.
 
 ```javascript
 const useSEO = ({ title, description, canonical, noindex = false }) => {
@@ -97,99 +300,66 @@ const useSEO = ({ title, description, canonical, noindex = false }) => {
 };
 ```
 
-Each page calls `useSEO()` with its specific metadata. Pages that shouldn't be indexed (like `/game/:id` or `/error`) get `noindex: true`.
+Each page calls `useSEO()` with specific metadata. Pages like `/game/:id` get `noindex: true`.
 
-**Result:** Proper canonical URLs, unique meta descriptions, and Google now indexes all relevant pages correctly.
+**Result:** Proper indexing, unique meta descriptions per route.
 
 ---
 
 ### 3. State Management Across Disconnects
 
-**The Problem:** WebSocket connections drop. Users refresh. Networks flake. If I didn't handle this gracefully, live games would break mid-match.
+**The Problem:** WebSockets drop. Users refresh. Networks flake. Games must survive.
 
-**The Solution:** I designed a **resilient reconnection strategy**:
+**The Solution:** Resilient reconnection strategy.
 
-1. **Server persists all game state** in PostgreSQL—never trust the client as source of truth
-2. **On reconnect**, the client fetches the full game state via REST API before re-subscribing to WebSocket
-3. **Timers are recalculated** server-side based on `lastMoveTimestamp`, so clocks are accurate even after a 30-second disconnect
-4. **Optimistic UI** with server reconciliation—the client shows moves immediately but waits for server confirmation
+1. **Server persists all state** in PostgreSQL (never trust client)
+2. **On reconnect**, client fetches full game state via REST before re-subscribing to WebSocket
+3. **Timers recalculated** server-side based on `lastMoveTimestamp`
+4. **Optimistic UI** with server reconciliation
 
-**Result:** Players can refresh, lose connection, or switch devices, and the game continues seamlessly.
+**Result:** Refresh, disconnect, switch devices—game continues seamlessly.
 
 ---
 
 ### 4. AI Bot Performance
 
-**The Problem:** I initially implemented a custom **Minimax algorithm with Alpha-Beta pruning**. It worked fine at depth 3-4, but at depth 5+, it became unusably slow (5-10 seconds per move).
+**The Problem:** Custom Minimax with Alpha-Beta pruning was too slow at depth 5+ (5-10s per move).
 
-**The Solution:** I pivoted to **Stockfish**.
+**The Solution:** Stockfish integration.
 
-On the backend, I integrated Stockfish as a subprocess. The `StockfishService` manages the engine lifecycle, sends positions via UCI protocol, and retrieves best moves at configurable depth levels:
-
-- **SuperPawn (Beginner):** Depth 1
-- **SuperKnight (Intermediate):** Depth 5
-- **SuperGrandmaster (Expert):** Depth 15
+**Backend:** Stockfish runs as a subprocess managed by `StockfishService`. Communicates via UCI protocol.
 
 ```java
 public String getBestMove(String fen, int depth) {
     sendCommand("position fen " + fen);
     sendCommand("go depth " + depth);
-    // Parse "bestmove e2e4" from engine output
+    // Parse "bestmove e2e4" from output
 }
 ```
 
-On the frontend, I also integrated **Stockfish.js (WASM)** for the live position evaluation bar—giving players real-time feedback on who's winning.
+**Difficulty levels:**
+- **SuperPawn (Beginner):** Depth 5, Skill 1
+- **SuperKnight (Intermediate):** Depth 10, Skill 10
+- **SuperGrandmaster (Expert):** Depth 15, Skill 20
 
-**Result:** AI moves in <500ms at any depth, with proper chess engine quality.
+**Frontend:** Stockfish.js (WASM) runs in a Web Worker for the live evaluation bar.
+
+**Result:** AI moves quickly and consistently, proper engine strength, real-time eval.
 
 ---
 
 ### 5. Google Sign-In Complexity
 
-**The Problem:** I thought Google OAuth would be a quick integration. I didn't realize it came with compliance requirements: **Privacy Policy**, **Terms of Service**, and a proper **Landing Page**.
+**The Problem:** OAuth requires Privacy Policy, Terms of Service, and a public landing page. Google rejected my consent screen because the app had no public info.
 
-Google rejected my OAuth consent screen because the app was "just a dashboard"—no public-facing info for unauthenticated users.
+**The Solution:** Restructured the app.
 
-**The Solution:** I restructured the entire app:
+- Created **public landing page** at `/` with features, FAQ, CTA
+- Moved dashboard to `/home`
+- Built **Privacy Policy** and **Terms** pages
+- Added **JSON-LD structured data** for rich search results
 
-- Created a **public landing page** at `/` with feature showcase, FAQ, and call-to-action
-- Moved the authenticated dashboard to `/home`
-- Built dedicated **Privacy Policy** and **Terms of Service** pages
-- Added proper **JSON-LD structured data** for rich search results
-
-What started as a 1-hour task turned into a 2-week effort that transformed SuperChess from a simple tool into a proper platform.
-
-**Result:** OAuth works, the app looks professional, and Google is happy.
-
----
-
-## Key Features
-
-### 🎮 Game Modes
-- **Online Matchmaking** — Automatic pairing with players worldwide
-- **Friend Games** — Private rooms with 6-digit invite codes
-- **AI Opponents** — Stockfish engine at 3 levels (SuperPawn, SuperKnight, SuperGrandmaster)
-
-### ⏱️ Time Controls
-- Bullet (1 min), Blitz (3 min), Rapid (10 min), Classical (30 min)
-
-### 🔐 Authentication
-- Email/Password with BCrypt hashing
-- Google OAuth 2.0 with automatic profile picture sync
-- JWT-based session management
-
-### 📊 Gameplay
-- Real-time WebSocket synchronization
-- Server-side move validation (anti-cheat)
-- Live position evaluation bar (Stockfish WASM)
-- Captured pieces display with material difference
-- Full move history with algebraic notation
-
-### 🎨 UX Polish
-- Dark/Light theme with system preference detection
-- Responsive design (mobile, tablet, desktop)
-- Sound effects for moves, captures, check, game end
-- Built-in **Report Bug** and **Request Feature** pages
+**Result:** OAuth approved, app looks professional.
 
 ---
 
@@ -199,14 +369,14 @@ What started as a 1-hour task turned into a 2-week effort that transformed Super
 |-------|----------|------|
 | Frontend | Cloudflare Pages | Free |
 | Backend | Render | Free |
-| Database | Neon DB (PostgreSQL) | Free |
+| Database | Neon DB | Free |
 | CI/CD | GitHub Actions | Free |
 
 ---
 
 ## What's Next?
 
-Honestly? **Nothing, unless users show up.**
+Honestly? **Not much next—unless people start playing consistently.**
 
 I've scoped out features like ELO ratings, game replay/analysis, spectator mode, and puzzles. But building those takes significant time.
 
@@ -218,7 +388,8 @@ My rule: If daily active users hit **100 and stay consistent for a month**, I'll
 
 Building SuperChess taught me that the "simple" features are often the hardest. Timers, authentication flows, state synchronization, and SEO in SPAs all required careful thought and multiple iterations.
 
-If you're a chess player—**come play a game**. I'll see you on the board. ♔
+#### For Chess Players 🎮
+**Come play a game!** Visit [superchess.iamraj.dev](https://superchess.iamraj.dev) and let me know what you think. Feedback is gold.
 
 ---
 
