@@ -38,7 +38,7 @@ export default function ProjectCard({ projectKey, project, onOpen }) {
       <CardActionArea onClick={() => { trackEvent('project_open', { project_key: projectKey, where: 'card' }); onOpen && onOpen(projectKey); }} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', flexGrow: 1, borderRadius: 0 }}>
         {/* Fixed-height image area so all cards look uniform */}
         <Box sx={{ height: 160, overflow: 'hidden', position: 'relative', background: 'linear-gradient(135deg,#2a2345,#14121f)' }}>
-          <img src={imgSrc} alt={`${project.title} - ${project.category}`} onError={(e) => { e.currentTarget.style.display = 'none'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          <img src={imgSrc} alt={`${project.title} - ${project.category}`} loading="lazy" onError={(e) => { e.currentTarget.style.display = 'none'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
           <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent, rgba(0,0,0,0.5))' }} />
         </Box>
         {/* Content grows to push actions to bottom consistently */}

@@ -178,6 +178,7 @@ export default function FeaturedProjectNotification() {
                         <img
                             src={`${import.meta.env.VITE_BASE_URL || '/'}${logo}`}
                             alt={`${title} Logo`}
+                            loading="lazy"
                             style={{
                                 width: '100%',
                                 height: '100%',

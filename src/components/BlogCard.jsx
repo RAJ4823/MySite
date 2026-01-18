@@ -72,6 +72,7 @@ export default function BlogCard({ blog }) {
                     <img
                         src={imgSrc}
                         alt={blog.title}
+                        loading="lazy"
                         onError={(e) => {
                             e.currentTarget.style.display = 'none';
                         }}

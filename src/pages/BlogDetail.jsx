@@ -198,6 +198,7 @@ const createMarkdownComponents = (toc, TableOfContents) => ({
                 component="img"
                 src={src}
                 alt={alt}
+                loading="lazy"
                 sx={{
                     maxWidth: '100%',
                     height: isBadge ? 'auto' : 'auto',

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Home from './pages/Home';
@@ -6,8 +6,10 @@ import Blogs from './pages/Blogs';
 import BlogDetail from './pages/BlogDetail';
 import SolarSystem from './pages/SolarSystem';
 import NotFound from './pages/NotFound';
-import Background3D from './components/Background3D';
 import { initGA, startEngagementTracking, initClickTracking, trackPageView } from './utils/analytics';
+
+// Lazy load the heavy 3D background for better initial page load
+const Background3D = lazy(() => import('./components/Background3D'));
 
 function ScrollToHashElement() {
   const location = useLocation();
@@ -49,7 +51,9 @@ export default function App() {
   return (
     <Box sx={{ position: 'relative', minHeight: '100vh' }}>
       {/* Persistent solar system background - skip for solar-system page which has its own */}
-      <Background3D mode={isSolarSystem ? 'interactive' : 'background'} />
+      <Suspense fallback={null}>
+        <Background3D mode={isSolarSystem ? 'interactive' : 'background'} />
+      </Suspense>
 
       {/* Page content layer */}
       <Box sx={{ position: 'relative', zIndex: isSolarSystem ? 'auto' : 1 }}>
