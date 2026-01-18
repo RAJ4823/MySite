@@ -384,13 +384,4 @@ My rule: If daily active users hit **100 and stay consistent for a month**, I'll
 
 ---
 
-## Wrapping Up
-
-Building SuperChess taught me that the "simple" features are often the hardest. Timers, authentication flows, state synchronization, and SEO in SPAs all required careful thought and multiple iterations.
-
-#### For Chess Players 🎮
-**Come play a game!** Visit [superchess.iamraj.dev](https://superchess.iamraj.dev) and let me know what you think. Feedback is gold.
-
----
-
 *Built with 💜 by [Raj Patel](https://iamraj.dev)*

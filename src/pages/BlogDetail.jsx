@@ -298,8 +298,13 @@ export default function BlogDetail() {
 
     useSEO({
         title: `${blog?.shortTitle || blog?.title || 'Blog Not Found'} | Blogs`,
-        description: blog?.description || 'Blog Not Found',
+        description: blog?.excerpt || 'Blog Not Found',
         canonical: `/blogs/${slug}`,
+        keywords: [
+            'Raj Patel', 'iamraj', 'iamraj.dev', 'rajpatel', 'raj patel developer', 'raj patel portfolio',
+            ...blog?.keywords,
+            ...blog?.tags
+        ],
     });
 
     useEffect(() => {

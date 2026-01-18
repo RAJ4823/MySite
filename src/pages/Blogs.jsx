@@ -15,6 +15,12 @@ export default function BlogList() {
         title: 'Blogs',
         description: 'A space where I share ideas, stories, and things I’m learning—ranging from tech and building projects to travel, science, and anything else that sparks curiosity.',
         canonical: '/blogs',
+        keywords: [
+            'Raj Patel', 'iamraj', 'iamraj.dev', 'rajpatel', 'raj patel developer', 'raj patel portfolio',
+            'Raj Patel Blog', 'iamraj blog', 'tech blog', 'software development blog', 'programming tutorials',
+            'web development articles', 'React blog', 'Spring Boot tutorials', 'chess programming',
+            'full stack developer blog', 'coding insights', 'developer stories', 'project building', 'tech learning'
+        ],
     });
 
     return (

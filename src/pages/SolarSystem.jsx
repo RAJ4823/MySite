@@ -15,6 +15,12 @@ export default function SolarSystem() {
         title: '3D Solar System',
         description: 'Explore an interactive 3D solar system visualization.',
         canonical: '/solar-system',
+        keywords: [
+            'Raj Patel', 'iamraj', 'iamraj.dev', 'rajpatel', 'raj patel developer', 'raj patel portfolio',
+            'Raj Patel solar system', 'iamraj solar system', '3D solar system', 'solar system',
+            'Interactive 3D solar system', 'Solar system simulation', 'Planets', 'Stars', 'Space',
+            'React', 'ThreeJS', 'WebGL', '3D graphics', 'Space exploration',
+        ],
     });
 
     // Check if user has seen the guide before
