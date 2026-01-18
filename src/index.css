@@ -3,11 +3,23 @@
   scroll-behavior: smooth;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 
 body {
   margin: 0;
   background: #0B0B12;
+}
+
+/* Specific styling for the SuperChess Architecture diagram in blog posts */
+img[src*="diagrams/"] {
+  height: auto;
+  max-height: 600px;
+  border-radius: 0px;
+  display: block;
+  margin: 1rem auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }

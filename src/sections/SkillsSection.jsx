@@ -28,12 +28,12 @@ const SkillsSection = () => {
       <Box sx={{ mt: 2 }}>
         <Typography variant="overline" color="text.primary" sx={{ display: 'block', mb: 0.5, fontSize: '1.2rem', fontWeight: 600 }}>Tech Skills</Typography>
         <Grid container justifyContent="space-between">
-          <Grid item xs={12} md={6} lg={6} width={{ md: '48%', xs: '100%' }}>
+          <Grid width={{ md: '48%', xs: '100%' }}>
             {TECH_SKILLS_DATA.slice(0, Math.ceil(TECH_SKILLS_DATA.length / 2)).map((s) => (
               <SkillBar key={s.skill} label={s.skill} value={s.percentage} />
             ))}
           </Grid>
-          <Grid item xs={12} md={6} lg={6} width={{ md: '48%', xs: '100%' }}>
+          <Grid width={{ md: '48%', xs: '100%' }}>
             {TECH_SKILLS_DATA.slice(Math.ceil(TECH_SKILLS_DATA.length / 2)).map((s) => (
               <SkillBar key={s.skill} label={s.skill} value={s.percentage} />
             ))}

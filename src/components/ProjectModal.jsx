@@ -1,4 +1,5 @@
 import { memo, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -6,15 +7,16 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
+import ArticleIcon from '@mui/icons-material/Article';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { trackEvent } from '../analytics';
+import { trackEvent } from '../utils/analytics';
 
 // Optimized image component with lazy loading
 const LazyImage = memo(({ src, alt }) => (
-  <Box sx={{ 
-    position: 'relative', 
-    width: '100%', 
+  <Box sx={{
+    position: 'relative',
+    width: '100%',
     aspectRatio: '16 / 9',
     background: 'linear-gradient(135deg,#2a2345,#14121f)',
     borderRadius: 1,
@@ -39,7 +41,7 @@ const LazyImage = memo(({ src, alt }) => (
       onLoad={(e) => {
         e.target.style.opacity = 1;
       }}
-      onError={(e) => { 
+      onError={(e) => {
         e.target.style.display = 'none';
       }}
     />
@@ -141,7 +143,7 @@ const ProjectModal = memo(({ open, onClose, projectKey, project }) => {
     >
       <DialogTitle sx={{ pr: 6, pb: 1 }}>
         <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: 0.3 }}>{project.title}</Typography>
-        <IconButton 
+        <IconButton
           onClick={(e) => {
             isClosing.current = true;
             const dialog = dialogRef.current?.querySelector('.MuiDialog-paper');
@@ -151,17 +153,17 @@ const ProjectModal = memo(({ open, onClose, projectKey, project }) => {
             setTimeout(() => {
               onClose();
             }, 200);
-          }} 
-          sx={{ position: 'absolute', right: 8, top: 8 }} 
+          }}
+          sx={{ position: 'absolute', right: 8, top: 8 }}
           aria-label="close"
         >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent sx={{ pt: 0.5 }}>
-        <Box sx={{ 
-          display: 'flex', 
-          flexDirection: { xs: 'column', md: 'row' }, 
+        <Box sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
           gap: 2.5,
           pt: 0.5,
           '& > *': {
@@ -170,18 +172,33 @@ const ProjectModal = memo(({ open, onClose, projectKey, project }) => {
         }}>
           <Box sx={{ flex: 2, minWidth: 0, flexShrink: 0 }}>
             <LazyImage src={imgSrc} alt={project.title} />
-            <Button 
-              href={project.url} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              variant="contained" 
-              color="primary"
-              disabled={isCurrentSite}
-              sx={{ mt: 2.5, fontWeight: 700, boxShadow: '0 8px 20px rgba(106,90,205,0.35)' }}
-              onClick={() => trackEvent('project_visit', { project_key: projectKey, url: project.url, where: 'modal' })}
-            >
-              Visit Project
-            </Button>
+            <Box sx={{ display: 'flex', gap: 1.5, mt: 2.5, flexWrap: 'wrap' }}>
+              <Button
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="contained"
+                color="primary"
+                disabled={isCurrentSite}
+                sx={{ fontWeight: 700, boxShadow: '0 8px 20px rgba(106,90,205,0.35)' }}
+                onClick={() => trackEvent('project_visit', { project_key: projectKey, url: project.url, where: 'modal' })}
+              >
+                Visit Project
+              </Button>
+              {project.blogSlug && (
+                <Button
+                  component={Link}
+                  to={`/blogs/${project.blogSlug}`}
+                  variant="outlined"
+                  color="secondary"
+                  startIcon={<ArticleIcon />}
+                  sx={{ fontWeight: 600 }}
+                  onClick={() => trackEvent('project_blog_click', { project_key: projectKey, blog_slug: project.blogSlug, where: 'modal' })}
+                >
+                  Read Blog
+                </Button>
+              )}
+            </Box>
           </Box>
           <Box sx={{ flex: 2, minWidth: 0 }}>
             <Typography variant="overline" color="primary.light" sx={{ fontWeight: 700, letterSpacing: 1 }}>

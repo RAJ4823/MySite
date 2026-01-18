@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { keyframes, useMediaQuery } from '@mui/system';
-import { trackEvent } from '../analytics';
+import { trackEvent } from '../utils/analytics';
 import { FEATURED_PROJECT } from '../data/featuredProject';
 
 // Subtle float animation

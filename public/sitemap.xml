@@ -7,9 +7,34 @@
   <!-- Homepage -->
   <url>
     <loc>https://iamraj.dev/</loc>
-    <lastmod>2025-12-21</lastmod>
+    <lastmod>2026-01-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
 
+  <!-- Solar System -->
+  <url>
+    <loc>https://iamraj.dev/solar-system</loc>
+    <lastmod>2026-01-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Blog List -->
+  <url>
+    <loc>https://iamraj.dev/blogs</loc>
+    <lastmod>2026-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Blog Posts -->
+  <url>
+    <loc>https://iamraj.dev/blogs/building-superchess</loc>
+    <lastmod>2026-01-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
 </urlset>
+

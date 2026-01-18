@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import Tooltip from '@mui/material/Tooltip';
 import { useMemo, useState, useCallback } from 'react';
 import { TECH_STACK } from '../data/techStack';
-import { trackEvent } from '../analytics';
+import { trackEvent } from '../utils/analytics';
 
 function TechCard({ name, color, iconify }) {
   const [pos, setPos] = useState({ x: 0, y: 0 });
